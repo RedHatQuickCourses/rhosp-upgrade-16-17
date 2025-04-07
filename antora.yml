@@ -1,5 +1,5 @@
-name: REPLACEREPONAME
-title: FIXME Course Title
+name: rhosp-upgrade-16-17
+title: Red Hat OpenStack Platform 16.2 to 17.1 upgrade
 version: 1
 nav:
 - modules/ROOT/nav.adoc

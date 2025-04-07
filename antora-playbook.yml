@@ -1,6 +1,6 @@
 site:
-  title: FIXME Course Title
-  start_page: REPLACEREPONAME::index.adoc
+  title: Red Hat OpenStack Platform 16.2 to 17.1 upgrade
+  start_page: rhosp-upgrade-16-17::index.adoc
 
 content:
   sources:
