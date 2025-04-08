@@ -1,0 +1,110 @@
+= Upgrading the Control Plane Nodes
+
+To upgrade the control plane nodes in your environment to RHEL 9.2, you must upgrade one-third of your control plane nodes at a time, starting with the bootstrap nodes.
+
+Each node is shut down during the system upgrade. The performance of the Pacemaker cluster and the Ceph cluster is degraded during this downtime, but there is no outage.
+
+This example includes the following nodes:
+
+- overcloud-controller-0
+- overcloud-controller-1
+- overcloud-controller-2
+
+*Procedure:*
+
+. Log in to the undercloud host as the stack user.
+Source the stackrc file:
++
+----
+source ~/stackrc
+----
+
+. Use the following variables that we used in the overcloud adoption section:
++
+----
+export CONTROL_PLANE_ROLES="--role Controller"
+export COMPUTE_ROLES="--role Compute"
+export NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel9",'
+export EL8_NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel8",'
+export EL9_TAGS='"tag":"17.1",'
+export EL8_TAGS='"tag":"17.1",'
+export CEPH_TAGS='"ceph_tag":"latest",'
+export NEUTRON_DRIVER='"neutron_driver":"ovn",'
+----
+
+. Run the following script without the CONTROL_PLANE_ROLES parameter:
++
+----
+python3 \
+/usr/share/openstack-tripleo-heat-templates/tools/multi-rhel-container-image-prepare.py \
+     ${COMPUTE_ROLES} \
+--local-push-destination \
+     --enable-multi-rhel \
+     --excludes collectd \
+     --excludes nova-libvirt \
+     --minor-override \
+"{${EL8_TAGS}${EL8_NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --major-override \
+     "{${EL9_TAGS}${NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --output-env-file \
+/home/stack/containers-prepare-parameter.yaml
+----
+
+. Add credentials to our generated containers-prepare-parameter.yaml with the following command:
++
+----
+cat >> /home/stack/containers-prepare-parameter.yaml <<EOF           
+  ContainerImageRegistryLogin: true
+  ContainerImageRegistryCredentials:
+    registry.redhat.io:
+      1979710|test-rhosp16.1: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJhODU0YTEzMTI5NzA0MmY0YmVmYjBlMTM1OWI2OTZiYSJ9.mYlBdmv2vssWv5uQ5kI9__qZLmYn48AG_DghKtzjmTx5n3O1l-MU1sUMGCSJaekGP6m6OSWLfz5Rl82Px4BHZ7SDnSRtd8SNvsHmRkS85_djRwi5gW4V3TXjXhzV_e0rw-q8SmnMpe7uZklRKfJCsziPfrOziAnSLAqQAkcPujwXSpg2dzKtZjWjgfjldGEraIj3FBdY9ISs7ZilE4HdRHEvMseHtZzFu93Td7iOcsAHRkK78evoDntrXmoVjAueDc_kU_nCJ8l1-vuw3W0TJ8_5HZ0gqQur1G_NORq7qIh3Ffq0x7mLTNYpKcVf4Sg-T6wwWDxL2U3oBX6r9HKm8ZvasPB-D0mV_zd6we1EF4CPcXUBSzat1tPzJTISTp8QIOj8dnJ2vyQjwBC9A4VTlwQFr95Z4m3sGhjwqeTi-iBTTWGzlXettTsQfkpxK34qd6G5bGKIwRQsZ27JkPxhGRmEqP7H2d-Ann08NzKqOXYnYBeNUybOxGlvutRtiH0CnsY_NJVqZ3sTIoZHTTbUPdSKtiYW2XNwXbQ_L8jKaXtOAN1tPi-R-thx-9XFLwVJh9uXe9mZ1uH0mh8-oMXV5iDCVXmhmR58BUcWqb3EbLD9AKO2iwLZTFbsa-NRjEF3UgZgqaGx1IDbe7EQlgiqeXmZUfrpdO9YIjks3RGxp70
+EOF
+----
+
+. In the skip_rhel_release.yaml file, set the SkipRhelEnforcement parameter to false:
++
+----
+sed -i 's/true/false/' /home/stack/skip_rhel_release.yaml
+----
+
+. Update the overcloud_upgrade_prepare.sh file:
++
+----
+cat > /home/stack/overcloud_upgrade_prepare.sh <<EOF
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server 172.25.250.1 \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  -e /home/stack/templates/system_upgrade.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF
+----
+
+. Run the upgrade prepare command:
++
+----
+sh /home/stack/overcloud_upgrade_prepare.sh
+----
+
+. Fetch any new or modified containers that you require for the system upgrade:
++
+----
+openstack overcloud external-upgrade run --yes  \
+    --stack overcloud \
+    --tags container_image_prepare 2>&1
+----

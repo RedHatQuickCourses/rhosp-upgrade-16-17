@@ -1,7 +1,8 @@
-= Chapter 1
+= Upgrading the Undercloud
 
-In this section, we cover... FIXME
+This section contains the following sub-sections:
 
-
-- Add or remove section entries in the `antora.yaml` file as needed.
-- Ensure you create or delete the corresponding directory for the chapter accordingly.
+- Enabling repositories for the undercloud
+- Container image preparation parameters
+- Updating the undercloud.conf file
+- Running the director upgrade

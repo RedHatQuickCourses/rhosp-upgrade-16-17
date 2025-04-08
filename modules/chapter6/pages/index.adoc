@@ -1,0 +1,19 @@
+= Upgrading the Compute node operating system
+You can upgrade the operating system on all of your Compute nodes to RHEL 9.2, or upgrade some Compute nodes to RHEL 9.2 while the rest remain on RHEL 8.4.
+
+In our example:
+
+* overcloud-novacompute-0 will be upgraded to RHEL 9.2
+* overcloud-novacompute-1 will remain in RHEL 8.4
+
+This upgrade process involves the following fundamental steps:
+
+* Plan which nodes you want to upgrade to RHEL 9.2, and which nodes you want to remain on RHEL 8.4. Choose a role name for each role that you are creating for each batch of nodes, for example:
+** ComputeRHEL-8.4
+** ComputeRHEL-9.2
+
+* Create roles that store the nodes that you want to upgrade to RHEL 9.2 or the nodes that are staying on RHEL 8.4. These roles can remain empty until you are ready to move your Compute nodes to a new role. You can create as many roles as you need and divide nodes among them any way you decide.
+
+* Move the nodes from each Compute role to the new role.
+
+* Upgrade the operating system on specific Compute nodes to RHEL 9.2. You can upgrade nodes in batches from the same role or multiple roles.

@@ -1,3 +1,6 @@
 = Appendix
 
-FIXME: Content for Appendix...
+This list includes content referenced during research for this training in addition to links you can use for ongoing reference or additional learning:
+
+https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/17.1/html-single/framework_for_upgrades_16.2_to_17.1/index[Framework for upgrades (16.2 to 17.1),window=_blank]
+
