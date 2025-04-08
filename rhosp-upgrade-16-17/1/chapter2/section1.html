@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Section 1 :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <title>Running the Overcloud Upgrade Preparation :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
     <link rel="prev" href="index.html">
-    <link rel="next" href="../chapter3/index.html">
+    <link rel="next" href="section2.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -55,16 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter1/index.html">Chapter 1</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter1/section1.html">Section 1</a>
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter1/section2.html">Section 2</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter1/section3.html">Section 3</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -74,10 +77,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Chapter 2</a>
+    <a class="nav-link" href="index.html">Performing the Overcloud Adoption</a>
 <ul class="nav-list">
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Section 1</a>
+    <a class="nav-link" href="section1.html">Running the Overcloud Upgrade Preparation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="section2.html">Running the Overcloud Upgrade Preparation (Continued)</a>
   </li>
 </ul>
   </li>
@@ -87,13 +93,67 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter3/index.html">Chapter 3</a>
+    <a class="nav-link" href="../chapter3/index.html">Upgrading the Overcloud</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter3/section1.html">Section 1</a>
+    <a class="nav-link" href="../chapter3/section1.html">Register and subscribe the overcloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter3/section2.html">Section 2</a>
+    <a class="nav-link" href="../chapter3/section2.html">Upgrading RHOSP on all Nodes in Each Stack</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter4/index.html">Upgrading the Undercloud Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section2.html">Validating your SSH Key Size</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter5/index.html">Upgrading the Control Plane Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter6/index.html">Upgrading the Compute node operating system</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section1.html">Creating roles for Multi-RHEL Compute nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section3.html">Upgrading the Compute Node Operating System</a>
   </li>
 </ul>
   </li>
@@ -135,8 +195,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Chapter 2</a></li>
-    <li><a href="section1.html">Section 1</a></li>
+    <li><a href="index.html">Performing the Overcloud Adoption</a></li>
+    <li><a href="section1.html">Running the Overcloud Upgrade Preparation</a></li>
   </ul>
 </nav>
 </div>
@@ -145,26 +205,175 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Section 1</h1>
+<h1 class="page">Running the Overcloud Upgrade Preparation</h1>
+<div class="paragraph">
+<p>To upgrade Red Hat OpenStack Platform to the latest version, you must run the <em>overcloud upgrade prepare</em> command. The command performs the following tasks:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Create multiple copies of this section as needed.</p>
+<p>Updates the overcloud plan to Red Hat OpenStack Platform (RHOSP) 17.1</p>
 </li>
 <li>
-<p>Remove any unnecessary sections or chapter pages.</p>
-</li>
-<li>
-<p>Customize the section as appropriate.</p>
-</li>
-<li>
-<p>Ensure that each page contains a manageable amount of content.</p>
+<p>Prepares the nodes for the upgrade</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p><strong>Procedure:</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log into the undercloud as the stack user.</p>
+</li>
+<li>
+<p>Source the stackrc file:</p>
+<div class="listingblock">
+<div class="content">
+<pre>source ~/stackrc</pre>
+</div>
+</div>
+</li>
+<li>
+<p>On the main stack, copy the <em>passwords.yaml</em> file to the <em>~/overcloud-deploy/overcloud directory</em>. Repeat this step on each stack in your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cp ~/overcloud-deploy/overcloud/tripleo-overcloud-passwords.yaml ~/overcloud-deploy/overcloud/overcloud-passwords.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>On the main stack, copy the network-data.yaml file to the stack user’s home directory and deploy the networks. Repeat this step on each stack in your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cp ~/overcloud-deploy/overcloud/tripleo-overcloud-network-data.yaml ~/
+mkdir ~/overcloud_adopt
+openstack overcloud network provision --debug --output /home/stack/overcloud_adopt/generated-networks-deployed.yaml tripleo-overcloud-network-data.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>On the main stack, copy the <em>virtual-ips.yaml</em> to the stack user’s home directory and provision the network VIPs. Repeat this step on each stack in your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cp ~/overcloud-deploy/overcloud/tripleo-overcloud-virtual-ips.yaml ~/
+openstack overcloud network vip provision --debug --stack overcloud --output /home/stack/overcloud_adopt/generated-vip-deployed.yaml tripleo-overcloud-virtual-ips.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>On the main stack, copy the baremetal-deployment.yaml to the stack user’s home directory and provision the overcloud nodes. Repeat this step on each stack in your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cp ~/overcloud-deploy/overcloud/tripleo-overcloud-baremetal-deployment.yaml ~/
+openstack overcloud node provision --debug --stack overcloud --output /home/stack/overcloud_adopt/baremetal-deployment.yaml tripleo-overcloud-baremetal-deployment.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Complete the following steps to prepare the containers:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Back up the containers-prepare-parameter.yaml file that you used for the undercloud upgrade:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cp containers-prepare-parameter.yaml containers-prepare-parameter.yaml.bck</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Define the following environment variables before you run the script to update the containers-prepare-parameter.yaml file.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>NAMESPACE - The namespace for the UBI9 images. For example, NAMESPACE='"namespace":"example.redhat.com:5002</p>
+</li>
+<li>
+<p>EL8_NAMESPACE - The namespace for the UBI8 images.</p>
+</li>
+<li>
+<p>NEUTRON_DRIVER - The driver to use and determine which OpenStack Networking (neutron) container to use. Set to the type of containers you used to deploy the original stack. For example, set to NEUTRON_DRIVER=' "neutron_driver":"ovn" to use OVN-based containers.</p>
+</li>
+<li>
+<p>EL9_TAGS - The tags of the UBI9 images. EL9_TAGS='"tag":"17.1",'</p>
+</li>
+<li>
+<p>EL8_TAGS - The tags of the UBI8 images. EL8_TAGS='"tag":"17.1".'</p>
+</li>
+<li>
+<p>CEPH_TAGS - If you deployed Red Hat Ceph Storage, specify Ceph Storage 5 container images. For example, "ceph_tag":"5-404".
++</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sudo awk '/tripleo_role_name/ {print "--role " $2}' /var/lib/mistral/overcloud/tripleo-ansible-inventory.yaml | grep -i compute</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CEPH_TAGS - If you deployed Red Hat Ceph Storage, specify Ceph Storage 5 container images. For example, "ceph_tag":"5-404".</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>export CONTROL_PLANE_ROLES="--role Controller"
+export COMPUTE_ROLES="--role Compute"
+export NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel9",'
+export EL8_NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel8",'
+export EL9_TAGS='"tag":"17.1",'
+export EL8_TAGS='"tag":"17.1",'
+export CEPH_TAGS='"ceph_tag":"latest",'
+export NEUTRON_DRIVER='"neutron_driver":"ovn",'</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run the following script to to update the containers-prepare-parameter.yaml file:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>python3 /usr/share/openstack-tripleo-heat-templates/tools/multi-rhel-container-image-prepare.py \
+        ${COMPUTE_ROLES} \
+        ${CONTROL_PLANE_ROLES} \
+        --enable-multi-rhel \
+        --excludes collectd \
+--local-push-destination \
+--excludes nova-libvirt \
+        --minor-override "{${EL8_TAGS}${EL8_NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" --major-override "{${EL9_TAGS}${NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}"  \
+        --output-env-file /home/stack/containers-prepare-parameter.yaml</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Add credentials to our generated containers-prepare-parameter.yaml with the following command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &gt;&gt; /home/stack/containers-prepare-parameter.yaml &lt;&lt;EOF
+ContainerImageRegistryLogin: true
+ContainerImageRegistryCredentials:
+registry.redhat.io:
+ 1979710|test-rhosp16.1: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJhODU0YTEzMTI5NzA0MmY0YmVmYjBlMTM1OWI2OTZiYSJ9.mYlBdmv2vssWv5uQ5kI9__qZLmYn48AG_DghKtzjmTx5n3O1l-MU1sUMGCSJaekGP6m6OSWLfz5Rl82Px4BHZ7SDnSRtd8SNvsHmRkS85_djRwi5gW4V3TXjXhzV_e0rw-q8SmnMpe7uZklRKfJCsziPfrOziAnSLAqQAkcPujwXSpg2dzKtZjWjgfjldGEraIj3FBdY9ISs7ZilE4HdRHEvMseHtZzFu93Td7iOcsAHRkK78evoDntrXmoVjAueDc_kU_nCJ8l1-vuw3W0TJ8_5HZ0gqQur1G_NORq7qIh3Ffq0x7mLTNYpKcVf4Sg-T6wwWDxL2U3oBX6r9HKm8ZvasPB-D0mV_zd6we1EF4CPcXUBSzat1tPzJTISTp8QIOj8dnJ2vyQjwBC9A4VTlwQFr95Z4m3sGhjwqeTi-iBTTWGzlXettTsQfkpxK34qd6G5bGKIwRQsZ27JkPxhGRmEqP7H2d-Ann08NzKqOXYnYBeNUybOxGlvutRtiH0CnsY_NJVqZ3sTIoZHTTbUPdSKtiYW2XNwXbQ_L8jKaXtOAN1tPi-R-thx-9XFLwVJh9uXe9mZ1uH0mh8-oMXV5iDCVXmhmR58BUcWqb3EbLD9AKO2iwLZTFbsa-NRjEF3UgZgqaGx1IDbe7EQlgiqeXmZUfrpdO9YIjks3RGxp70
+EOF</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Chapter 2</a></span>
-  <span class="next"><a href="../chapter3/index.html">Chapter 3</a></span>
+  <span class="prev"><a href="index.html">Performing the Overcloud Adoption</a></span>
+  <span class="next"><a href="section2.html">Running the Overcloud Upgrade Preparation (Continued)</a></span>
 </nav>
 </article>
   </div>

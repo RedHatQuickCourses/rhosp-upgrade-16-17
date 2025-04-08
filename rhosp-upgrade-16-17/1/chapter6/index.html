@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling repositories for the undercloud :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
-    <link rel="prev" href="index.html">
-    <link rel="next" href="section2.html">
+    <title>Upgrading the Compute node operating system :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="../chapter5/section2.html">
+    <link rel="next" href="section1.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -55,19 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Upgrading the Undercloud</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Enabling repositories for the undercloud</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Container Image Preparation Parameters</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section3.html">Updating the Undercloud.conf File</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section4.html">Running the Director Upgrade</a>
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -142,18 +142,18 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter6/index.html">Upgrading the Compute node operating system</a>
+    <a class="nav-link" href="index.html">Upgrading the Compute node operating system</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter6/section1.html">Creating roles for Multi-RHEL Compute nodes</a>
+    <a class="nav-link" href="section1.html">Creating roles for Multi-RHEL Compute nodes</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter6/section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
+    <a class="nav-link" href="section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter6/section3.html">Upgrading the Compute Node Operating System</a>
+    <a class="nav-link" href="section3.html">Upgrading the Compute Node Operating System</a>
   </li>
 </ul>
   </li>
@@ -195,8 +195,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Upgrading the Undercloud</a></li>
-    <li><a href="section1.html">Enabling repositories for the undercloud</a></li>
+    <li><a href="index.html">Upgrading the Compute node operating system</a></li>
   </ul>
 </nav>
 </div>
@@ -205,71 +204,52 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling repositories for the undercloud</h1>
-<div class="olist arabic">
-<ol class="arabic">
+<h1 class="page">Upgrading the Compute node operating system</h1>
+<div class="paragraph">
+<p>In our example:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>Log in to your undercloud as the stack user.</p>
+<p>overcloud-novacompute-0 will be upgraded to RHEL 9.2</p>
 </li>
 <li>
-<p>As a root user:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo -i
-subscription-manager register</pre>
-</div>
-</div>
+<p>overcloud-novacompute-1 will remain in RHEL 8.4</p>
 </li>
-<li>
-<p>Attach your poolD or employee SKU</p>
-<div class="listingblock">
-<div class="content">
-<pre>subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)</pre>
-</div>
+</ul>
 </div>
 <div class="paragraph">
-<p>FIXME Note: Option to fetch the pool ID in the above command is applicable only to the Red Hat internal employees. Others need to use the appropriate pool ID based on your subscription.</p>
+<p>This upgrade process involves the following fundamental steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Plan which nodes you want to upgrade to RHEL 9.2, and which nodes you want to remain on RHEL 8.4. Choose a role name for each role that you are creating for each batch of nodes, for example:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>ComputeRHEL-8.4</p>
+</li>
+<li>
+<p>ComputeRHEL-9.2</p>
+</li>
+</ul>
 </div>
 </li>
 <li>
-<p>Change to the stack user</p>
-<div class="listingblock">
-<div class="content">
-<pre>su - stack</pre>
-</div>
-</div>
+<p>Create roles that store the nodes that you want to upgrade to RHEL 9.2 or the nodes that are staying on RHEL 8.4. These roles can remain empty until you are ready to move your Compute nodes to a new role. You can create as many roles as you need and divide nodes among them any way you decide.</p>
 </li>
 <li>
-<p>Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo subscription-manager repos --disable=*
-sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
-sudo subscription-manager release --set=8.4</pre>
-</div>
-</div>
+<p>Move the nodes from each Compute role to the new role.</p>
 </li>
 <li>
-<p>Switch the container-tools module version to RHEL 8 on all nodes:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf -y module switch-to container-tools:rhel8</pre>
-</div>
-</div>
+<p>Upgrade the operating system on specific Compute nodes to RHEL 9.2. You can upgrade nodes in batches from the same role or multiple roles.</p>
 </li>
-<li>
-<p>Install the command line tools for director installation and configuration:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf install -y python3-tripleoclient</pre>
-</div>
-</div>
-</li>
-</ol>
+</ul>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Upgrading the Undercloud</a></span>
-  <span class="next"><a href="section2.html">Container Image Preparation Parameters</a></span>
+  <span class="prev"><a href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a></span>
+  <span class="next"><a href="section1.html">Creating roles for Multi-RHEL Compute nodes</a></span>
 </nav>
 </article>
   </div>

@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling repositories for the undercloud :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
-    <link rel="prev" href="index.html">
-    <link rel="next" href="section2.html">
+    <title>Performing the System Upgrade on the Undercloud Host :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="section2.html">
+    <link rel="next" href="../chapter5/index.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -55,19 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Upgrading the Undercloud</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Enabling repositories for the undercloud</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Container Image Preparation Parameters</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section3.html">Updating the Undercloud.conf File</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section4.html">Running the Director Upgrade</a>
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -109,16 +109,16 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter4/index.html">Upgrading the Undercloud Operating System</a>
+    <a class="nav-link" href="index.html">Upgrading the Undercloud Operating System</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+    <a class="nav-link" href="section1.html">Setting the SSH Root Permission Parameter</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section2.html">Validating your SSH Key Size</a>
+    <a class="nav-link" href="section2.html">Validating your SSH Key Size</a>
   </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="section3.html">Performing the System Upgrade on the Undercloud Host</a>
   </li>
 </ul>
   </li>
@@ -195,8 +195,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Upgrading the Undercloud</a></li>
-    <li><a href="section1.html">Enabling repositories for the undercloud</a></li>
+    <li><a href="index.html">Upgrading the Undercloud Operating System</a></li>
+    <li><a href="section3.html">Performing the System Upgrade on the Undercloud Host</a></li>
   </ul>
 </nav>
 </div>
@@ -205,71 +205,87 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling repositories for the undercloud</h1>
+<h1 class="page">Performing the System Upgrade on the Undercloud Host</h1>
+<div class="paragraph">
+<p>Upgrade your undercloud operating system to RHEL 9.2. As part of this upgrade, you create a file named system_upgrade.yaml file, which is used to enable the appropriate repositories and required RHOSP options and content to install Leapp. You use this file to also upgrade your control plane nodes and Compute nodes.</p>
+</div>
+<div class="paragraph">
+<p><strong>Procedure:</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Log in to your undercloud as the stack user.</p>
+<p>Log in to the undercloud as the stack user.</p>
 </li>
 <li>
-<p>As a root user:</p>
+<p>Create a file named system_upgrade.yaml in your templates directory and include the following content:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo -i
-subscription-manager register</pre>
+<pre>cat &gt; /home/stack/templates/system_upgrade.yaml &lt;&lt;EOF
+parameter_defaults:
+  UpgradeLeappDevelSkip: "LEAPP_UNSUPPORTED=1 LEAPP_DEVEL_SKIP_CHECK_OS_RELEASE=1 LEAPP_NO_NETWORK_RENAMING=1 LEAPP_DEVEL_TARGET_RELEASE=9.2"
+  UpgradeLeappDebug: false
+  UpgradeLeappEnabled: true
+  LeappActorsToRemove: ['checkifcfg','persistentnetnamesdisable','checkinstalledkernels','biosdevname']
+  LeappRepoInitCommand: |
+    sudo subscription-manager repos --disable=*
+    subscription-manager repos --enable rhel-8-for-x86_64-baseos-tus-rpms --enable rhel-8-for-x86_64-appstream-tus-rpms --enable openstack-17.1-for-rhel-8-x86_64-rpms
+    subscription-manager release --set=8.4
+  UpgradeLeappCommandOptions:
+    "--enablerepo=rhel-9-for-x86_64-baseos-eus-rpms --enablerepo=rhel-9-for-x86_64-appstream-eus-rpms --enablerepo=rhel-9-for-x86_64-highavailability-eus-rpms --enablerepo=openstack-17.1-for-rhel-9-x86_64-rpms --enablerepo=fast-datapath-for-rhel-9-x86_64-rpms"
+  LeappInitCommand: |
+    sudo subscription-manager repos --disable=*
+    sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=openstack-17.1-for-rhel-9-x86_64-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms
+    leapp answer --add --section check_vdo.confirm=True
+    dnf -y remove irb
+EOF</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Attach your poolD or employee SKU</p>
+<p>Run the System upgrade</p>
 <div class="listingblock">
 <div class="content">
-<pre>subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)</pre>
+<pre>openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>FIXME Note: Option to fetch the pool ID in the above command is applicable only to the Red Hat internal employees. Others need to use the appropriate pool ID based on your subscription.</p>
+<p><strong>Note:</strong> If you need to run the Leapp upgrade again, you must first reset the repositories to RHEL 8 in the undercloud.</p>
 </div>
-</li>
-<li>
-<p>Change to the stack user</p>
-<div class="listingblock">
-<div class="content">
-<pre>su - stack</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories</p>
 <div class="listingblock">
 <div class="content">
 <pre>sudo subscription-manager repos --disable=*
-sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
-sudo subscription-manager release --set=8.4</pre>
+sudo subscription-manager repos --enable rhel-8-for-x86_64-baseos-tus-rpms --enable rhel-8-for-x86_64-appstream-tus-rpms --enable openstack-17.1-for-rhel-8-x86_64-rpms
+sudo subscription-manager release --set=8.4
+openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Switch the container-tools module version to RHEL 8 on all nodes:</p>
+<p>Reboot the undercloud, this process could take 5-10 min:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo dnf -y module switch-to container-tools:rhel8</pre>
+<pre> sudo reboot</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Install the command line tools for director installation and configuration:</p>
+<p>Update the old keys with the new keys generated in the previous section</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo dnf install -y python3-tripleoclient</pre>
+<pre>cp .ssh/id_rsa /home/stack/overcloud-deploy/overcloud/ssh_private_key
+cp .ssh/id_rsa.pub /home/stack/overcloud-deploy/overcloud/ssh_private_key.pub</pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> Run the above command on undercloud as stack user.</p>
 </div>
 </li>
 </ol>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Upgrading the Undercloud</a></span>
-  <span class="next"><a href="section2.html">Container Image Preparation Parameters</a></span>
+  <span class="prev"><a href="section2.html">Validating your SSH Key Size</a></span>
+  <span class="next"><a href="../chapter5/index.html">Upgrading the Control Plane Operating System</a></span>
 </nav>
 </article>
   </div>

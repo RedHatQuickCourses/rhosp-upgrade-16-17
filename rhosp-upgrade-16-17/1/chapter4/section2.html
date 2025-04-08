@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling repositories for the undercloud :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
-    <link rel="prev" href="index.html">
-    <link rel="next" href="section2.html">
+    <title>Validating your SSH Key Size :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="section1.html">
+    <link rel="next" href="section3.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -55,19 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Upgrading the Undercloud</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Enabling repositories for the undercloud</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Container Image Preparation Parameters</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section3.html">Updating the Undercloud.conf File</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section4.html">Running the Director Upgrade</a>
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -109,16 +109,16 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter4/index.html">Upgrading the Undercloud Operating System</a>
+    <a class="nav-link" href="index.html">Upgrading the Undercloud Operating System</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+    <a class="nav-link" href="section1.html">Setting the SSH Root Permission Parameter</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="section2.html">Validating your SSH Key Size</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section2.html">Validating your SSH Key Size</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+    <a class="nav-link" href="section3.html">Performing the System Upgrade on the Undercloud Host</a>
   </li>
 </ul>
   </li>
@@ -195,8 +195,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Upgrading the Undercloud</a></li>
-    <li><a href="section1.html">Enabling repositories for the undercloud</a></li>
+    <li><a href="index.html">Upgrading the Undercloud Operating System</a></li>
+    <li><a href="section2.html">Validating your SSH Key Size</a></li>
   </ul>
 </nav>
 </div>
@@ -205,71 +205,47 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling repositories for the undercloud</h1>
+<h1 class="page">Validating your SSH Key Size</h1>
+<div class="paragraph">
+<p>Red Hat Enterprise Linux (RHEL) 9.1 requires a minimum SSH key size of 2048 bits. You must check that your current SSH key on Red Hat OpenStack Platform (RHOSP) director has a key of at least 2048 bits. If you do not have an SSH key that meets the requirements of RHEL 9.x, you can lose access to the overcloud.</p>
+</div>
+<div class="paragraph">
+<p><strong>Procedure:</strong></p>
+</div>
+<div class="paragraph">
+<p>You must complete this procedure if your SSH key size is under the required 2048 bits.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Log in to your undercloud as the stack user.</p>
-</li>
-<li>
-<p>As a root user:</p>
+<p>Validate your SSH key size:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo -i
-subscription-manager register</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Attach your poolD or employee SKU</p>
-<div class="listingblock">
-<div class="content">
-<pre>subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)</pre>
+<pre>ssh-keygen -l -f ~/.ssh/id_rsa.pub</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>FIXME Note: Option to fetch the pool ID in the above command is applicable only to the Red Hat internal employees. Others need to use the appropriate pool ID based on your subscription.</p>
+<p>Example output:</p>
 </div>
-</li>
-<li>
-<p>Change to the stack user</p>
 <div class="listingblock">
 <div class="content">
-<pre>su - stack</pre>
+<pre>1024 SHA256:Xqz0Xz0/aJua6B3qRD7VsLr6n/V3zhmnGSkcFR6FlJw stack@director.example.local (RSA)</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories</p>
+<p>If your SSH key is less than 2048 bits, use the ssh_key_rotation.yaml ansible playbook to rotate it out.</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo subscription-manager repos --disable=*
-sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
-sudo subscription-manager release --set=8.4</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Switch the container-tools module version to RHEL 8 on all nodes:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf -y module switch-to container-tools:rhel8</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install the command line tools for director installation and configuration:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf install -y python3-tripleoclient</pre>
+<pre>ansible-playbook -i ~/overcloud-deploy/overcloud/tripleo-ansible-inventory.yaml /usr/share/ansible/tripleo-playbooks/ssh_key_rotation.yaml</pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Upgrading the Undercloud</a></span>
-  <span class="next"><a href="section2.html">Container Image Preparation Parameters</a></span>
+  <span class="prev"><a href="section1.html">Setting the SSH Root Permission Parameter</a></span>
+  <span class="next"><a href="section3.html">Performing the System Upgrade on the Undercloud Host</a></span>
 </nav>
 </article>
   </div>

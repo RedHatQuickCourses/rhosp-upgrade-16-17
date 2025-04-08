@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling repositories for the undercloud :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
-    <link rel="prev" href="index.html">
-    <link rel="next" href="section2.html">
+    <title>Upgrading the Control Plane Operating System :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="../chapter4/section3.html">
+    <link rel="next" href="section1.html">
     <meta name="generator" content="Antora 3.1.3">
     <link rel="stylesheet" href="../../../_/css/site.css">
     <script>var uiRootPath = '../../../_'</script>
@@ -55,19 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Upgrading the Undercloud</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Enabling repositories for the undercloud</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Container Image Preparation Parameters</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section3.html">Updating the Undercloud.conf File</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section4.html">Running the Director Upgrade</a>
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -126,15 +126,15 @@
   </li>
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter5/index.html">Upgrading the Control Plane Operating System</a>
+    <a class="nav-link" href="index.html">Upgrading the Control Plane Operating System</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+    <a class="nav-link" href="section1.html">Upgrading the Control Plane Nodes</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+    <a class="nav-link" href="section2.html">Upgrading the Control Plane Nodes (Continued)</a>
   </li>
 </ul>
   </li>
@@ -195,8 +195,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Upgrading the Undercloud</a></li>
-    <li><a href="section1.html">Enabling repositories for the undercloud</a></li>
+    <li><a href="index.html">Upgrading the Control Plane Operating System</a></li>
   </ul>
 </nav>
 </div>
@@ -205,71 +204,26 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling repositories for the undercloud</h1>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Log in to your undercloud as the stack user.</p>
-</li>
-<li>
-<p>As a root user:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo -i
-subscription-manager register</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Attach your poolD or employee SKU</p>
-<div class="listingblock">
-<div class="content">
-<pre>subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)</pre>
-</div>
-</div>
+<h1 class="page">Upgrading the Control Plane Operating System</h1>
 <div class="paragraph">
-<p>FIXME Note: Option to fetch the pool ID in the above command is applicable only to the Red Hat internal employees. Others need to use the appropriate pool ID based on your subscription.</p>
+<p>Upgrade the operating system on your control plane nodes. The upgrade includes the following tasks:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>Running the overcloud upgrade prepare command with the system upgrade parameters</p>
 </li>
 <li>
-<p>Change to the stack user</p>
-<div class="listingblock">
-<div class="content">
-<pre>su - stack</pre>
-</div>
-</div>
+<p>Running the overcloud system upgrade, which uses Leapp to upgrade RHEL in-place</p>
 </li>
 <li>
-<p>Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo subscription-manager repos --disable=*
-sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
-sudo subscription-manager release --set=8.4</pre>
-</div>
-</div>
+<p>Rebooting the nodes</p>
 </li>
-<li>
-<p>Switch the container-tools module version to RHEL 8 on all nodes:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf -y module switch-to container-tools:rhel8</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install the command line tools for director installation and configuration:</p>
-<div class="listingblock">
-<div class="content">
-<pre>sudo dnf install -y python3-tripleoclient</pre>
-</div>
-</div>
-</li>
-</ol>
+</ul>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Upgrading the Undercloud</a></span>
-  <span class="next"><a href="section2.html">Container Image Preparation Parameters</a></span>
+  <span class="prev"><a href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a></span>
+  <span class="next"><a href="section1.html">Upgrading the Control Plane Nodes</a></span>
 </nav>
 </article>
   </div>

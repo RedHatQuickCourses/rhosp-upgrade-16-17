@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Enabling repositories for the undercloud :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <title>Upgrading the Control Plane Nodes :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
     <link rel="prev" href="index.html">
     <link rel="next" href="section2.html">
     <meta name="generator" content="Antora 3.1.3">
@@ -55,19 +55,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="index.html">Upgrading the Undercloud</a>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="section1.html">Enabling repositories for the undercloud</a>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section2.html">Container Image Preparation Parameters</a>
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section3.html">Updating the Undercloud.conf File</a>
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="section4.html">Running the Director Upgrade</a>
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -128,13 +128,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../chapter5/index.html">Upgrading the Control Plane Operating System</a>
+    <a class="nav-link" href="index.html">Upgrading the Control Plane Operating System</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="section1.html">Upgrading the Control Plane Nodes</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+    <a class="nav-link" href="section2.html">Upgrading the Control Plane Nodes (Continued)</a>
   </li>
 </ul>
   </li>
@@ -195,8 +195,8 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
-    <li><a href="index.html">Upgrading the Undercloud</a></li>
-    <li><a href="section1.html">Enabling repositories for the undercloud</a></li>
+    <li><a href="index.html">Upgrading the Control Plane Operating System</a></li>
+    <li><a href="section1.html">Upgrading the Control Plane Nodes</a></li>
   </ul>
 </nav>
 </div>
@@ -205,71 +205,152 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Enabling repositories for the undercloud</h1>
+<h1 class="page">Upgrading the Control Plane Nodes</h1>
+<div class="paragraph">
+<p>To upgrade the control plane nodes in your environment to RHEL 9.2, you must upgrade one-third of your control plane nodes at a time, starting with the bootstrap nodes.</p>
+</div>
+<div class="paragraph">
+<p>Each node is shut down during the system upgrade. The performance of the Pacemaker cluster and the Ceph cluster is degraded during this downtime, but there is no outage.</p>
+</div>
+<div class="paragraph">
+<p>This example includes the following nodes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>overcloud-controller-0</p>
+</li>
+<li>
+<p>overcloud-controller-1</p>
+</li>
+<li>
+<p>overcloud-controller-2</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Procedure:</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Log in to your undercloud as the stack user.</p>
-</li>
-<li>
-<p>As a root user:</p>
+<p>Log in to the undercloud host as the stack user.
+Source the stackrc file:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo -i
-subscription-manager register</pre>
+<pre>source ~/stackrc</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Attach your poolD or employee SKU</p>
+<p>Use the following variables that we used in the overcloud adoption section:</p>
 <div class="listingblock">
 <div class="content">
-<pre>subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>FIXME Note: Option to fetch the pool ID in the above command is applicable only to the Red Hat internal employees. Others need to use the appropriate pool ID based on your subscription.</p>
-</div>
-</li>
-<li>
-<p>Change to the stack user</p>
-<div class="listingblock">
-<div class="content">
-<pre>su - stack</pre>
+<pre>export CONTROL_PLANE_ROLES="--role Controller"
+export COMPUTE_ROLES="--role Compute"
+export NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel9",'
+export EL8_NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel8",'
+export EL9_TAGS='"tag":"17.1",'
+export EL8_TAGS='"tag":"17.1",'
+export CEPH_TAGS='"ceph_tag":"latest",'
+export NEUTRON_DRIVER='"neutron_driver":"ovn",'</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories</p>
+<p>Run the following script without the CONTROL_PLANE_ROLES parameter:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo subscription-manager repos --disable=*
-sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
-sudo subscription-manager release --set=8.4</pre>
+<pre>python3 \
+/usr/share/openstack-tripleo-heat-templates/tools/multi-rhel-container-image-prepare.py \
+     ${COMPUTE_ROLES} \
+--local-push-destination \
+     --enable-multi-rhel \
+     --excludes collectd \
+     --excludes nova-libvirt \
+     --minor-override \
+"{${EL8_TAGS}${EL8_NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --major-override \
+     "{${EL9_TAGS}${NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --output-env-file \
+/home/stack/containers-prepare-parameter.yaml</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Switch the container-tools module version to RHEL 8 on all nodes:</p>
+<p>Add credentials to our generated containers-prepare-parameter.yaml with the following command:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo dnf -y module switch-to container-tools:rhel8</pre>
+<pre>cat &gt;&gt; /home/stack/containers-prepare-parameter.yaml &lt;&lt;EOF
+  ContainerImageRegistryLogin: true
+  ContainerImageRegistryCredentials:
+    registry.redhat.io:
+      1979710|test-rhosp16.1: eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJhODU0YTEzMTI5NzA0MmY0YmVmYjBlMTM1OWI2OTZiYSJ9.mYlBdmv2vssWv5uQ5kI9__qZLmYn48AG_DghKtzjmTx5n3O1l-MU1sUMGCSJaekGP6m6OSWLfz5Rl82Px4BHZ7SDnSRtd8SNvsHmRkS85_djRwi5gW4V3TXjXhzV_e0rw-q8SmnMpe7uZklRKfJCsziPfrOziAnSLAqQAkcPujwXSpg2dzKtZjWjgfjldGEraIj3FBdY9ISs7ZilE4HdRHEvMseHtZzFu93Td7iOcsAHRkK78evoDntrXmoVjAueDc_kU_nCJ8l1-vuw3W0TJ8_5HZ0gqQur1G_NORq7qIh3Ffq0x7mLTNYpKcVf4Sg-T6wwWDxL2U3oBX6r9HKm8ZvasPB-D0mV_zd6we1EF4CPcXUBSzat1tPzJTISTp8QIOj8dnJ2vyQjwBC9A4VTlwQFr95Z4m3sGhjwqeTi-iBTTWGzlXettTsQfkpxK34qd6G5bGKIwRQsZ27JkPxhGRmEqP7H2d-Ann08NzKqOXYnYBeNUybOxGlvutRtiH0CnsY_NJVqZ3sTIoZHTTbUPdSKtiYW2XNwXbQ_L8jKaXtOAN1tPi-R-thx-9XFLwVJh9uXe9mZ1uH0mh8-oMXV5iDCVXmhmR58BUcWqb3EbLD9AKO2iwLZTFbsa-NRjEF3UgZgqaGx1IDbe7EQlgiqeXmZUfrpdO9YIjks3RGxp70
+EOF</pre>
 </div>
 </div>
 </li>
 <li>
-<p>Install the command line tools for director installation and configuration:</p>
+<p>In the skip_rhel_release.yaml file, set the SkipRhelEnforcement parameter to false:</p>
 <div class="listingblock">
 <div class="content">
-<pre>sudo dnf install -y python3-tripleoclient</pre>
+<pre>sed -i 's/true/false/' /home/stack/skip_rhel_release.yaml</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Update the overcloud_upgrade_prepare.sh file:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &gt; /home/stack/overcloud_upgrade_prepare.sh &lt;&lt;EOF
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server 172.25.250.1 \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  -e /home/stack/templates/system_upgrade.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the upgrade prepare command:</p>
+<div class="listingblock">
+<div class="content">
+<pre>sh /home/stack/overcloud_upgrade_prepare.sh</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Fetch any new or modified containers that you require for the system upgrade:</p>
+<div class="listingblock">
+<div class="content">
+<pre>openstack overcloud external-upgrade run --yes  \
+    --stack overcloud \
+    --tags container_image_prepare 2&gt;&amp;1</pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="index.html">Upgrading the Undercloud</a></span>
-  <span class="next"><a href="section2.html">Container Image Preparation Parameters</a></span>
+  <span class="prev"><a href="index.html">Upgrading the Control Plane Operating System</a></span>
+  <span class="next"><a href="section2.html">Upgrading the Control Plane Nodes (Continued)</a></span>
 </nav>
 </article>
   </div>

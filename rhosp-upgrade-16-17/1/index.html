@@ -54,16 +54,19 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="chapter1/index.html">Chapter 1</a>
+    <a class="nav-link" href="chapter1/index.html">Upgrading the Undercloud</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter1/section1.html">Section 1</a>
+    <a class="nav-link" href="chapter1/section1.html">Enabling repositories for the undercloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter1/section2.html">Section 2</a>
+    <a class="nav-link" href="chapter1/section2.html">Container Image Preparation Parameters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter1/section3.html">Section 3</a>
+    <a class="nav-link" href="chapter1/section3.html">Updating the Undercloud.conf File</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter1/section4.html">Running the Director Upgrade</a>
   </li>
 </ul>
   </li>
@@ -73,10 +76,13 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="chapter2/index.html">Chapter 2</a>
+    <a class="nav-link" href="chapter2/index.html">Performing the Overcloud Adoption</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter2/section1.html">Section 1</a>
+    <a class="nav-link" href="chapter2/section1.html">Running the Overcloud Upgrade Preparation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter2/section2.html">Running the Overcloud Upgrade Preparation (Continued)</a>
   </li>
 </ul>
   </li>
@@ -86,13 +92,67 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="chapter3/index.html">Chapter 3</a>
+    <a class="nav-link" href="chapter3/index.html">Upgrading the Overcloud</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter3/section1.html">Section 1</a>
+    <a class="nav-link" href="chapter3/section1.html">Register and subscribe the overcloud</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="chapter3/section2.html">Section 2</a>
+    <a class="nav-link" href="chapter3/section2.html">Upgrading RHOSP on all Nodes in Each Stack</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="chapter4/index.html">Upgrading the Undercloud Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter4/section2.html">Validating your SSH Key Size</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="chapter5/index.html">Upgrading the Control Plane Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="chapter6/index.html">Upgrading the Compute node operating system</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter6/section1.html">Creating roles for Multi-RHEL Compute nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter6/section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="chapter6/section3.html">Upgrading the Compute Node Operating System</a>
   </li>
 </ul>
   </li>
@@ -148,11 +208,11 @@
 <h2 id="_introduction"><a class="anchor" href="#_introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Course Title: Course title FIXME</p>
+<p>Course Title: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</p>
 </div>
 <div class="paragraph">
 <p>Description:
-Course description FIXME</p>
+In this training we will go through all the steps to update the Red Hat OpenStack Platform from 16.2 to 17.1.</p>
 </div>
 <div class="paragraph">
 <p>Duration: FIXME hours</p>
@@ -163,20 +223,10 @@ Course description FIXME</p>
 <h2 id="_objectives"><a class="anchor" href="#_objectives"></a>Objectives</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>On completing this course, you should be able to:</p>
+<p>In this Hands-on Lab we will go through all the steps to upgrade the Red Hat OpenStack Platform from 16.2 to 17.1.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Observable, measurable objective&#8230;&#8203;</p>
-</li>
-<li>
-<p>Observable, measurable objective&#8230;&#8203;</p>
-</li>
-<li>
-<p>Observable, measurable objective&#8230;&#8203;</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>On completing this course, you should be able to Update Red Hat OpenStack Platform from 16.2 to 17.1 with an example</p>
 </div>
 </div>
 </div>
@@ -184,18 +234,18 @@ Course description FIXME</p>
 <h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This course assumes that you have the following prior experience:</p>
+<p>This course assumes that you have gone through the following training content or have equivalent level of prior experience:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Course or experience&#8230;&#8203;</p>
+<p><a href="https://www.redhat.com/en/services/training/cl010-red-hat-openstack-technical-overview" target="_blank" rel="noopener">CL010</a></p>
 </li>
 <li>
-<p>Course or experience&#8230;&#8203;</p>
+<p><a href="https://www.redhat.com/en/services/training/cl110-red-hat-openstack-administration-i" target="_blank" rel="noopener">CL110</a></p>
 </li>
 <li>
-<p>Course or experience&#8230;&#8203;</p>
+<p><a href="https://www.redhat.com/en/services/training/cl210-red-hat-openstack-administration-ii" target="_blank" rel="noopener">CL210</a></p>
 </li>
 </ul>
 </div>
