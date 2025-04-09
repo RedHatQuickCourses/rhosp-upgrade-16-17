@@ -2,6 +2,7 @@
 
 Follow below steps to continue with the update process:
 
+[start=9]
 . Create an environment file called upgrades-environment.yaml in your templates directory and include the following content:
 +
 ----

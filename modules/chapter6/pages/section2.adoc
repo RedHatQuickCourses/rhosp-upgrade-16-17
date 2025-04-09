@@ -2,6 +2,7 @@
 
 Continue further with the below mentioned steps:
 
+[start=6]
 . Move the RHEL 9.2 Compute nodes from the source role to the new role:
 +
 ----

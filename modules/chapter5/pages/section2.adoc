@@ -2,6 +2,7 @@
 
 Continue with the below steps to proceed further with upgrading control plane nodes:
 
+[start=9]
 . Upgrade the first one-third of the control plane nodes: overcloud-controller-0
 +
 ----
