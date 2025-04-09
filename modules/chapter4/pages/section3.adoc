@@ -28,6 +28,14 @@ parameter_defaults:
 EOF
 ----
 
+. Clean some non-use podman images to gain some free storage:
++
+----
+sudo podman images | awk '/none/ {print $3}' | xargs sudo podman rmi 
+----
++
+*Note:* This step is specific to this environment/virtual machine
+
 . Run the System upgrade
 +
 ----

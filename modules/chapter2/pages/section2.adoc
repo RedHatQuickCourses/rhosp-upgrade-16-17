@@ -3,6 +3,17 @@
 Follow below steps to continue with the update process:
 
 [start=9]
+. Switch Nova to use _NovaLibvirtLegacy_ by creating a new file as below:
++
+----
+cat > /home/stack/templates/nova-legacy.yaml <<"EOF"
+resource_registry:
+  OS::TripleO::Services::NovaLibvirt: /usr/share/openstack-tripleo-heat-templates/deployment/deprecated/nova/nova-libvirt-container-puppet.yaml
+EOF
+----
++
+*NOTE:* The default RHOSP 17.1 configuration uses _NovaLibvirt_ as the default service. Because the OS on the compute nodes will remain (for now) on RHEL 8.4, you need to switch Nova to use *NovaLibvirtLegacy*.
+
 . Create an environment file called upgrades-environment.yaml in your templates directory and include the following content:
 +
 ----
@@ -39,7 +50,7 @@ For more information about the upgrade parameters that you can configure in the 
 . On the undercloud, create a file called overcloud_upgrade_prepare.sh in your templates directory. This file includes the original content of your overcloud deploy file and the environment files that are relevant to your environment. For example:
 +
 ----
-cat > /home/stack/overcloud_upgrade_prepare.sh <<EOF
+cat > /home/stack/overcloud_upgrade_prepare.sh <<"EOF"
 #!/bin/bash
 openstack overcloud upgrade prepare --yes \
   --timeout 460 \
@@ -52,13 +63,13 @@ openstack overcloud upgrade prepare --yes \
   -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
   -e /home/stack/templates/disable_validations.yaml \
   -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/templates/nova-legacy.yaml \
   -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
   -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
   -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
   -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
   -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
   -e /home/stack/skip_rhel_release.yaml \
-  -e /home/stack/containers-prepare-parameter.yaml \
   --log-file /tmp/install_overcloud.log \
   --libvirt-type qemu
 EOF
