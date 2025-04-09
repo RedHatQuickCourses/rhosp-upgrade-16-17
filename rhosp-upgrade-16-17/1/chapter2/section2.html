@@ -212,6 +212,20 @@
 <div class="olist arabic">
 <ol class="arabic" start="9">
 <li>
+<p>Switch Nova to use <em>NovaLibvirtLegacy</em> by creating a new file as below:</p>
+<div class="listingblock">
+<div class="content">
+<pre>cat &gt; /home/stack/templates/nova-legacy.yaml &lt;&lt;"EOF"
+resource_registry:
+  OS::TripleO::Services::NovaLibvirt: /usr/share/openstack-tripleo-heat-templates/deployment/deprecated/nova/nova-libvirt-container-puppet.yaml
+EOF</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>NOTE:</strong> The default RHOSP 17.1 configuration uses <em>NovaLibvirt</em> as the default service. Because the OS on the compute nodes will remain (for now) on RHEL 8.4, you need to switch Nova to use <strong>NovaLibvirtLegacy</strong>.</p>
+</div>
+</li>
+<li>
 <p>Create an environment file called upgrades-environment.yaml in your templates directory and include the following content:</p>
 <div class="listingblock">
 <div class="content">
@@ -252,7 +266,7 @@
 <p>On the undercloud, create a file called overcloud_upgrade_prepare.sh in your templates directory. This file includes the original content of your overcloud deploy file and the environment files that are relevant to your environment. For example:</p>
 <div class="listingblock">
 <div class="content">
-<pre>cat &gt; /home/stack/overcloud_upgrade_prepare.sh &lt;&lt;EOF
+<pre>cat &gt; /home/stack/overcloud_upgrade_prepare.sh &lt;&lt;"EOF"
 #!/bin/bash
 openstack overcloud upgrade prepare --yes \
   --timeout 460 \
@@ -265,13 +279,13 @@ openstack overcloud upgrade prepare --yes \
   -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
   -e /home/stack/templates/disable_validations.yaml \
   -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/templates/nova-legacy.yaml \
   -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
   -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
   -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
   -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
   -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
   -e /home/stack/skip_rhel_release.yaml \
-  -e /home/stack/containers-prepare-parameter.yaml \
   --log-file /tmp/install_overcloud.log \
   --libvirt-type qemu
 EOF</pre>

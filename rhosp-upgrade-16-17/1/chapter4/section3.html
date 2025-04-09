@@ -243,6 +243,17 @@ EOF</pre>
 </div>
 </li>
 <li>
+<p>Clean some non-use podman images to gain some free storage:</p>
+<div class="listingblock">
+<div class="content">
+<pre>sudo podman images | awk '/none/ {print $3}' | xargs sudo podman rmi</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> This step is specific to this environment/virtual machine</p>
+</div>
+</li>
+<li>
 <p>Run the System upgrade</p>
 <div class="listingblock">
 <div class="content">
