@@ -42,6 +42,18 @@ sudo podman images | awk '/none/ {print $3}' | xargs sudo podman rmi
 openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations
 ----
 +
+IMPORTANT: You may observe error while running above command
++
+**ERROR:** 
++
+----
+Upgrade has been inhibited due to the following problems:
+1. Inhibitor: Running kernel conflicts with a safe upgrade.
+----
++
+**RESOLUTION:** +
+Reboot undercloud to boot it with the latest kernel and run the Leapp upgrade again.
++
 *Note:* If you need to run the Leapp upgrade again, you must first reset the repositories to RHEL 8 in the undercloud.
 +
 ----
@@ -51,7 +63,9 @@ sudo subscription-manager release --set=8.4
 openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations
 ----
 
-. Reboot the undercloud, this process could take 5-10 min:
+FIXME time approx 20 mins
+
+. Reboot the undercloud, this process could take 15-20 min:
 +
 ----
  sudo reboot

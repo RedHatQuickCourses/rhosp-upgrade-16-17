@@ -16,3 +16,5 @@ source ~/stackrc
 ----
 openstack overcloud upgrade run --yes --stack overcloud --debug --limit allovercloud,undercloud --playbook all
 ----
+
+FIXME: Takes approximately an hour to finish

@@ -23,7 +23,6 @@ EOF
 +
 ----
 cat >> ~/subscribe.yaml <<EOF
-  tasks:
     - name: Attach to defined pool_id
       become: yes
       command: subscription-manager attach --pool=<POOL ID>

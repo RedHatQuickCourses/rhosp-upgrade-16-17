@@ -18,7 +18,7 @@ cat > /home/stack/overcloud_compute_upgrade_prepare.sh <<EOF
 #!/bin/bash
 openstack overcloud upgrade prepare --yes \
   --timeout 460 \
-  --ntp-server 172.25.250.1 \
+  --ntp-server time.google.com \
   --stack overcloud \
   --templates -e /home/stack/templates/node-info.yaml \
   -e /home/stack/containers-prepare-parameter.yaml \
@@ -51,6 +51,8 @@ sh overcloud_compute_upgrade_prepare.sh
 ----
 openstack overcloud upgrade run --yes --tags system_upgrade --stack overcloud --limit overcloud-novacompute-0
 ----
+
+FIXME takes 20 mins
 
 . Upgrade the containers on the Compute nodes to RHEL 9.2. Use the --limit option with a comma-separated list of nodes that you want to upgrade.
 +

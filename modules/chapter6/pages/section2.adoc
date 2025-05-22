@@ -20,6 +20,8 @@ This script includes the baremetal-deployment.yaml file that you used to provisi
 ----
 openstack overcloud node provision --stack overcloud --output /home/stack/overcloud_adopt/baremetal-deployment.yaml /home/stack/tripleo-overcloud-baremetal-deployment.yaml
 ----
++
+NOTE: Type _Y_ for *Overwrite existing file* prompt
 
 . Use the following variables that we used in the overcloud adoption section:
 +
@@ -72,3 +74,5 @@ This script includes the baremetal-deployment.yaml file that you used to provisi
 ----
 openstack overcloud node provision --stack overcloud --output /home/stack/overcloud_adopt/baremetal-deployment.yaml /home/stack/tripleo-overcloud-baremetal-deployment.yaml
 ----
++
+NOTE: Type _Y_ for *Overwrite existing file* prompt
