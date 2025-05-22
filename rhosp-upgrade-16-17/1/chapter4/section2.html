@@ -237,7 +237,7 @@
 <p>If your SSH key is less than 2048 bits, use the ssh_key_rotation.yaml ansible playbook to rotate it out.</p>
 <div class="listingblock">
 <div class="content">
-<pre>ansible-playbook -i ~/overcloud-deploy/overcloud/tripleo-ansible-inventory.yaml /usr/share/ansible/tripleo-playbooks/ssh_key_rotation.yaml</pre>
+<pre>ansible-playbook -i ~/overcloud-deploy/overcloud/tripleo-ansible-inventory.yaml /usr/share/ansible/tripleo-playbooks/ssh_key_rotation.yaml -e keys_folder=/home/stack/.ssh -e key_name=id_rsa</pre>
 </div>
 </div>
 </li>

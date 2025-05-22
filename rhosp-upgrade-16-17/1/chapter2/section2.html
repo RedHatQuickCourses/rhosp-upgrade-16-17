@@ -270,7 +270,7 @@ EOF</pre>
 #!/bin/bash
 openstack overcloud upgrade prepare --yes \
   --timeout 460 \
-  --ntp-server 172.25.250.1 \
+  --ntp-server time.google.com \
   --stack overcloud \
   --templates -e /home/stack/templates/node-info.yaml \
   -e /home/stack/containers-prepare-parameter.yaml \
@@ -303,7 +303,8 @@ sh /home/stack/overcloud_upgrade_prepare.sh</pre>
 </div>
 </li>
 <li>
-<p>Wait until the upgrade preparation completes.</p>
+<p>Wait until the upgrade preparation completes.
+FIXME: Takes approx 4 mins</p>
 </li>
 <li>
 <p>Download the container images:</p>

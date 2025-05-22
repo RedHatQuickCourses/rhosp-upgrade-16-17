@@ -260,6 +260,31 @@ EOF</pre>
 <pre>openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations</pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You may observe error while running above command
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>ERROR:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Upgrade has been inhibited due to the following problems:
+1. Inhibitor: Running kernel conflicts with a safe upgrade.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>RESOLUTION:</strong><br>
+Reboot undercloud to boot it with the latest kernel and run the Leapp upgrade again.</p>
+</div>
 <div class="paragraph">
 <p><strong>Note:</strong> If you need to run the Leapp upgrade again, you must first reset the repositories to RHEL 8 in the undercloud.</p>
 </div>
@@ -272,8 +297,15 @@ openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system
 </div>
 </div>
 </li>
+</ol>
+</div>
+<div class="paragraph">
+<p>FIXME time approx 20 mins</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>Reboot the undercloud, this process could take 5-10 min:</p>
+<p>Reboot the undercloud, this process could take 15-20 min:</p>
 <div class="listingblock">
 <div class="content">
 <pre> sudo reboot</pre>
