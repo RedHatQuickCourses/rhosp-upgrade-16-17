@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Creating roles for Multi-RHEL Compute nodes :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="index.html">
+    <link rel="next" href="section2.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhosp-upgrade-16-17/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="rhosp-upgrade-16-17" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../PREREQ/index.html">Prerequisites and Hardware Information</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter2/index.html">Performing the Overcloud Adoption</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter2/section1.html">Running the Overcloud Upgrade Preparation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter2/section2.html">Running the Overcloud Upgrade Preparation (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter3/index.html">Upgrading the Overcloud</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter3/section1.html">Register and subscribe the overcloud</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter3/section2.html">Upgrading RHOSP on all Nodes in Each Stack</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter4/index.html">Upgrading the Undercloud Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section2.html">Validating your SSH Key Size</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter5/index.html">Upgrading the Control Plane Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Upgrading the Compute node operating system</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="section1.html">Creating roles for Multi-RHEL Compute nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="section3.html">Upgrading the Compute Node Operating System</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
+    <li><a href="index.html">Upgrading the Compute node operating system</a></li>
+    <li><a href="section1.html">Creating roles for Multi-RHEL Compute nodes</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Creating roles for Multi-RHEL Compute nodes</h1>
+<div class="paragraph">
+<p>Create new roles to store your nodes that you are upgrading to RHEL 9.2 or that are staying on RHEL 8.4, and move the nodes into the new roles.</p>
+</div>
+<div class="paragraph">
+<p><strong>Procedure:</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Copy role_data.yaml to the templates directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp /usr/share/openstack-tripleo-heat-templates/roles_data.yaml /home/stack/templates/.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create the relevant roles for your environment. In the role_data.yaml file, copy the source Compute role to use for the new role.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>ComputeRHEL-8.4 role</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt;/home/stack/templates/roles_data.yaml &lt;&lt;EOF
+- name: ComputeRHEL-8.4
+  description: |
+    Basic Compute RHEL 8.4
+  CountDefault: 1
+  # Create external Neutron bridge (unset if using ML2/OVS without DVR)
+  tags:
+    - compute
+    - external_bridge
+  networks:
+    InternalApi:
+      subnet: internal_api_subnet
+    Tenant:
+      subnet: tenant_subnet
+    Storage:
+      subnet: storage_subnet
+  HostnameFormatDefault: '%stackname%-novacompute-%index%'
+  RoleParametersDefault:
+    FsAioMaxNumber: 1048576
+    TunedProfileName: "virtual-host"
+  # Deprecated &amp; backward-compatible values (FIXME: Make parameters consistent)
+  # Set uses_deprecated_params to True if any deprecated params are used.
+  # These deprecated_params only need to be used for existing roles and not for
+  # composable roles.
+  uses_deprecated_params: True
+  deprecated_param_image: 'NovaImage'
+  deprecated_param_extraconfig: 'NovaComputeExtraConfig'
+  deprecated_param_metadata: 'NovaComputeServerMetadata'
+  deprecated_param_scheduler_hints: 'NovaComputeSchedulerHints'
+  deprecated_param_ips: 'NovaComputeIPs'
+  deprecated_server_resource_name: 'NovaCompute'
+  deprecated_nic_config_name: 'compute.yaml'
+  update_serial: 25
+  ServicesDefault:
+    - OS::TripleO::Services::Aide
+    - OS::TripleO::Services::AuditD
+    - OS::TripleO::Services::BootParams
+    - OS::TripleO::Services::CACerts
+    - OS::TripleO::Services::CephClient
+    - OS::TripleO::Services::CephExternal
+    - OS::TripleO::Services::Collectd
+    - OS::TripleO::Services::ComputeCeilometerAgent
+    - OS::TripleO::Services::CeilometerAgentIpmi
+    - OS::TripleO::Services::ComputeNeutronCorePlugin
+    - OS::TripleO::Services::ComputeNeutronL3Agent
+    - OS::TripleO::Services::ComputeNeutronMetadataAgent
+    - OS::TripleO::Services::ComputeNeutronOvsAgent
+    - OS::TripleO::Services::Frr
+    - OS::TripleO::Services::IpaClient
+    - OS::TripleO::Services::Ipsec
+    - OS::TripleO::Services::Iscsid
+    - OS::TripleO::Services::Kernel
+    - OS::TripleO::Services::LoginDefs
+    - OS::TripleO::Services::MetricsQdr
+    - OS::TripleO::Services::Multipathd
+    - OS::TripleO::Services::MySQLClient
+    - OS::TripleO::Services::NeutronBgpVpnBagpipe
+    - OS::TripleO::Services::NeutronLinuxbridgeAgent
+    - OS::TripleO::Services::NeutronVppAgent
+    - OS::TripleO::Services::NovaAZConfig
+    - OS::TripleO::Services::NovaCompute
+    - OS::TripleO::Services::NovaLibvirtLegacy
+    - OS::TripleO::Services::NovaLibvirtGuests
+    - OS::TripleO::Services::NovaMigrationTarget
+    - OS::TripleO::Services::ContainersLogrotateCrond
+    - OS::TripleO::Services::Podman
+    - OS::TripleO::Services::Rhsm
+    - OS::TripleO::Services::Rsyslog
+    - OS::TripleO::Services::RsyslogSidecar
+    - OS::TripleO::Services::Securetty
+    - OS::TripleO::Services::Snmp
+    - OS::TripleO::Services::Sshd
+    - OS::TripleO::Services::Timesync
+    - OS::TripleO::Services::Timezone
+    - OS::TripleO::Services::TripleoFirewall
+    - OS::TripleO::Services::TripleoPackages
+    - OS::TripleO::Services::Tuned
+    - OS::TripleO::Services::Vpp
+    - OS::TripleO::Services::OVNController
+    - OS::TripleO::Services::OVNMetadataAgent
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ComputeRHEL-9.2 role</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt;/home/stack/templates/roles_data.yaml &lt;&lt;EOF
+- name: ComputeRHEL-9.2
+  description: |
+    Compute RHEL 9-2
+  CountDefault: 1
+  # Create external Neutron bridge (unset if using ML2/OVS without DVR)
+  tags:
+    - compute
+    - external_bridge
+  networks:
+    InternalApi:
+      subnet: internal_api_subnet
+    Tenant:
+      subnet: tenant_subnet
+    Storage:
+      subnet: storage_subnet
+  HostnameFormatDefault: '%stackname%-novacompute-%index%'
+  RoleParametersDefault:
+    FsAioMaxNumber: 1048576
+    TunedProfileName: "virtual-host"
+  # Deprecated &amp; backward-compatible values (FIXME: Make parameters consistent)
+  # Set uses_deprecated_params to True if any deprecated params are used.
+  # These deprecated_params only need to be used for existing roles and not for
+  # composable roles.
+  uses_deprecated_params: True
+  deprecated_param_image: 'NovaImage'
+  deprecated_param_extraconfig: 'NovaComputeExtraConfig'
+  deprecated_param_metadata: 'NovaComputeServerMetadata'
+  deprecated_param_scheduler_hints: 'NovaComputeSchedulerHints'
+  deprecated_param_ips: 'NovaComputeIPs'
+  deprecated_server_resource_name: 'NovaCompute'
+  deprecated_nic_config_name: 'compute.yaml'
+  update_serial: 25
+  ServicesDefault:
+    - OS::TripleO::Services::Aide
+    - OS::TripleO::Services::AuditD
+    - OS::TripleO::Services::BootParams
+    - OS::TripleO::Services::CACerts
+    - OS::TripleO::Services::CephClient
+    - OS::TripleO::Services::CephExternal
+    - OS::TripleO::Services::Collectd
+    - OS::TripleO::Services::ComputeCeilometerAgent
+    - OS::TripleO::Services::CeilometerAgentIpmi
+    - OS::TripleO::Services::ComputeNeutronCorePlugin
+    - OS::TripleO::Services::ComputeNeutronL3Agent
+    - OS::TripleO::Services::ComputeNeutronMetadataAgent
+    - OS::TripleO::Services::ComputeNeutronOvsAgent
+    - OS::TripleO::Services::Frr
+    - OS::TripleO::Services::IpaClient
+    - OS::TripleO::Services::Ipsec
+    - OS::TripleO::Services::Iscsid
+    - OS::TripleO::Services::Kernel
+    - OS::TripleO::Services::LoginDefs
+    - OS::TripleO::Services::MetricsQdr
+    - OS::TripleO::Services::Multipathd
+    - OS::TripleO::Services::MySQLClient
+    - OS::TripleO::Services::NeutronBgpVpnBagpipe
+    - OS::TripleO::Services::NeutronLinuxbridgeAgent
+    - OS::TripleO::Services::NeutronVppAgent
+    - OS::TripleO::Services::NovaAZConfig
+    - OS::TripleO::Services::NovaCompute
+    - OS::TripleO::Services::NovaLibvirt
+    - OS::TripleO::Services::NovaLibvirtGuests
+    - OS::TripleO::Services::NovaMigrationTarget
+    - OS::TripleO::Services::ContainersLogrotateCrond
+    - OS::TripleO::Services::Podman
+    - OS::TripleO::Services::Rhsm
+    - OS::TripleO::Services::Rsyslog
+    - OS::TripleO::Services::RsyslogSidecar
+    - OS::TripleO::Services::Securetty
+    - OS::TripleO::Services::Snmp
+    - OS::TripleO::Services::Sshd
+    - OS::TripleO::Services::Timesync
+    - OS::TripleO::Services::Timezone
+    - OS::TripleO::Services::TripleoFirewall
+    - OS::TripleO::Services::TripleoPackages
+    - OS::TripleO::Services::Tuned
+    - OS::TripleO::Services::Vpp
+    - OS::TripleO::Services::OVNController
+    - OS::TripleO::Services::OVNMetadataAgent
+EOF</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Copy the overcloud_upgrade_prepare.sh file to the copy_role_Compute_param.sh file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp overcloud_upgrade_prepare.sh copy_role_Compute_param.sh</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Edit the copy_role_Compute_param.sh file to include the copy_role_params.py script. This script generates the environment file that contains the additional parameters and resources for the new role.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt; /home/stack/copy_role_Compute_param.sh &lt;&lt;EOF
+/usr/share/openstack-tripleo-heat-templates/tools/copy_role_params.py --rolename-src Compute --rolename-dst ComputeRHEL-9.2 \
+-o /home/stack/templates/compute_params.yaml \
+-e /home/stack/containers-prepare-parameter.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+-e /home/stack/templates/disable_validations.yaml \
+-e /home/stack/templates/upgrades-environment.yaml \
+-e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+-e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+-e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+-e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+-e /home/stack/skip_rhel_release.yaml \
+-e /home/stack/templates/system_upgrade.yaml
+EOF</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Compute_source_role was replaced with the name of your source Compute role that you are copying: Compute</p>
+</li>
+<li>
+<p>Compute_destination_role was replaced with the name of your new role:ComputeRHEL-9.2`</p>
+</li>
+<li>
+<p><em>-o</em> option was defined as the name of the output file that includes all the non-default values of the source Compute role for the new role. Replace Compute_new_role_params.yaml with the name of your output file: /home/stack/templates/compute_params.yaml.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Execute the copy_role_Compute_param.sh script</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh copy_role_Compute_param.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Note:</strong> In our environment the generated file below /home/stack/templates/compute_params.yaml is empty since additional parameters and resources for the new role aren’t required.</p>
+</div>
+</li>
+</ol>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html">Upgrading the Compute node operating system</a></span>
+  <span class="next"><a href="section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

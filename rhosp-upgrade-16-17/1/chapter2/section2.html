@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Running the Overcloud Upgrade Preparation (Continued) :: Red Hat OpenStack Platform 16.2 to 17.1 upgrade</title>
+    <link rel="prev" href="section1.html">
+    <link rel="next" href="../chapter3/index.html">
+    <meta name="generator" content="Antora 3.1.3">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+    <script>var uiRootPath = '../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://www.redhat.com" target="_blank"><img src="../../../_/img/redhat-logo.png" height="40px" alt="Red Hat"></a>
+      <a class="navbar-item" style="font-size: 24px; color: white" href="../../..">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://github.com/RedHatQuickCourses/rhosp-upgrade-16-17/issues" target="_blank">Report Issues</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="rhosp-upgrade-16-17" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../LABENV/index.html">Lab Environment</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../PREREQ/index.html">Prerequisites and Hardware Information</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter1/index.html">Upgrading the Undercloud</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section1.html">Enabling repositories for the undercloud</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section2.html">Container Image Preparation Parameters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section3.html">Updating the Undercloud.conf File</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter1/section4.html">Running the Director Upgrade</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Performing the Overcloud Adoption</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="section1.html">Running the Overcloud Upgrade Preparation</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="section2.html">Running the Overcloud Upgrade Preparation (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter3/index.html">Upgrading the Overcloud</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter3/section1.html">Register and subscribe the overcloud</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter3/section2.html">Upgrading RHOSP on all Nodes in Each Stack</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter4/index.html">Upgrading the Undercloud Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section1.html">Setting the SSH Root Permission Parameter</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section2.html">Validating your SSH Key Size</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter4/section3.html">Performing the System Upgrade on the Undercloud Host</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter5/index.html">Upgrading the Control Plane Operating System</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section1.html">Upgrading the Control Plane Nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter5/section2.html">Upgrading the Control Plane Nodes (Continued)</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../chapter6/index.html">Upgrading the Compute node operating system</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section1.html">Creating roles for Multi-RHEL Compute nodes</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section2.html">Creating Roles for Multi RHEL Compute Nodes (Continued)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../chapter6/section3.html">Upgrading the Compute Node Operating System</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../appendix/appendix.html">Appendix</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Red Hat OpenStack Platform 16.2 to 17.1 upgrade</a></li>
+    <li><a href="index.html">Performing the Overcloud Adoption</a></li>
+    <li><a href="section2.html">Running the Overcloud Upgrade Preparation (Continued)</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Running the Overcloud Upgrade Preparation (Continued)</h1>
+<div class="paragraph">
+<p>Follow below steps to continue with the update process:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="9">
+<li>
+<p>Switch Nova to use <em>NovaLibvirtLegacy</em> by creating a new file as below:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt; /home/stack/templates/nova-legacy.yaml &lt;&lt;"EOF"
+resource_registry:
+  OS::TripleO::Services::NovaLibvirt: /usr/share/openstack-tripleo-heat-templates/deployment/deprecated/nova/nova-libvirt-container-puppet.yaml
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>NOTE:</strong> The default RHOSP 17.1 configuration uses <em>NovaLibvirt</em> as the default service. Because the OS on the compute nodes will remain (for now) on RHEL 8.4, you need to switch Nova to use <strong>NovaLibvirtLegacy</strong>.</p>
+</div>
+</li>
+<li>
+<p>Create an environment file called upgrades-environment.yaml in your templates directory and include the following content:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sudo vi /home/stack/templates/upgrades-environment.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">parameter_defaults:
+  ExtraConfig:
+    nova::workarounds::disable_compute_service_check_for_ffu: true
+  DnsServers: ["10.2.70.215"]
+  DockerInsecureRegistryAddress: "director.ctlplane.localdomain:8787"
+  UpgradeInitCommand: |
+    sudo subscription-manager repos --disable=*
+      if $( grep -q  9.2 /etc/os-release )
+      then
+        sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=openstack-17.1-for-rhel-9-x86_64-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms
+        sudo podman ps | grep -q ceph &amp;&amp; subscription-manager repos --enable=rhceph-5-tools-for-rhel-9-x86_64-rpms
+        sudo subscription-manager release --set=9.2
+      else
+        sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
+        sudo podman ps | grep -q ceph &amp;&amp; subscription-manager repos --enable=rhceph-5-tools-for-rhel-8-x86_64-rpms
+        sudo subscription-manager release --set=8.4
+      fi
+
+      if $(sudo podman ps | grep -q ceph )
+      then
+      sudo dnf -y install cephadm
+      fi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the upgrade parameters that you can configure in the environment file, see <a href="https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.2/html-single/framework_for_upgrades_13_to_16.2/index#upgrade-parameters" target="_blank" rel="noopener">Upgrade parameters</a></p>
+</div>
+</li>
+<li>
+<p>On the undercloud, create a file called overcloud_upgrade_prepare.sh in your templates directory. This file includes the original content of your overcloud deploy file and the environment files that are relevant to your environment. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt; /home/stack/overcloud_upgrade_prepare.sh &lt;&lt;"EOF"
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server time.google.com \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/templates/nova-legacy.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run the upgrade preparation command for the overcloud stack in your environment:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">source stackrc
+chmod 755 /home/stack/overcloud_upgrade_prepare.sh
+sh /home/stack/overcloud_upgrade_prepare.sh</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Tha above command may take approximately 4 minutes to complete.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Wait until the upgrade preparation completes.</p>
+</li>
+<li>
+<p>Download the container images:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openstack overcloud external-upgrade run --yes --stack overcloud --tags container_image_prepare</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Tha above command may take approximately 15 minutes to complete.
+</td>
+</tr>
+</table>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="section1.html">Running the Overcloud Upgrade Preparation</a></span>
+  <span class="next"><a href="../chapter3/index.html">Upgrading the Overcloud</a></span>
+</nav>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <img src="../../../_/img/rhl-logo-red.png" height="40px" alt="Red Hat"  href="https://redhat.com" >
+</footer><script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
