@@ -1,0 +1,7 @@
+= Upgrading the Undercloud Operating System
+
+You must upgrade the undercloud operating system from Red Hat Enterprise Linux 8.4 to Red Hat Enterprise Linux 9.2. The system upgrade performs the following tasks:
+
+- Ensures that network interface naming remains consistent after the system upgrade
+- Uses Leapp to upgrade RHEL in-place
+- Reboots the undercloud

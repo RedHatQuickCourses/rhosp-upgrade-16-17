@@ -1,0 +1,25 @@
+= Setting the SSH Root Permission Parameter
+
+The Leapp upgrade checks whether the _PermitRootLogin_ parameter exists in the _/etc/ssh/sshd_config_ file. You must explicitly set this parameter to either yes or no.
+
+For security purposes, set this parameter to no to disable SSH access to the root user on the undercloud.
+
+*Procedure:*
+
+. Log in to the undercloud as the stack user.
++
+Check the /etc/ssh/sshd_config file for the PermitRootLogin parameter:
++
+[source, bash]
+----
+sudo grep PermitRootLogin /etc/ssh/sshd_config
+----
+
+. If the parameter is not in the /etc/ssh/sshd_config file, edit the file and set the PermitRootLogin parameter to no:
++
+----
+sudo vi  /etc/ssh/sshd_config    
+PermitRootLogin no
+----
+
+. Save the file.

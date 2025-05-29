@@ -1,27 +1,25 @@
-= An Example Quick Course
+= Red Hat OpenStack Platform 16.2 to 17.1 upgrade
 :navtitle: Home
 
 == Introduction
 
-Course Title: Course title FIXME
+Course Title: Red Hat OpenStack Platform 16.2 to 17.1 upgrade
 
 Description:
-Course description FIXME
+In this training we will go through all the steps to update the Red Hat OpenStack Platform from 16.2 to 17.1.
 
-Duration: FIXME hours
+Duration: 3 hours
 
 == Objectives
 
-On completing this course, you should be able to:
+In this Hands-on Lab we will go through all the steps to upgrade the Red Hat OpenStack Platform from 16.2 to 17.1.
 
-* Observable, measurable objective...
-* Observable, measurable objective...
-* Observable, measurable objective...
+On completing this course, you should be able to Update Red Hat OpenStack Platform from 16.2 to 17.1 with an example
 
 == Prerequisites
 
-This course assumes that you have the following prior experience:
+This course assumes that you have gone through the following training content or have equivalent level of prior experience:
 
-* Course or experience...
-* Course or experience...
-* Course or experience...
+* https://www.redhat.com/en/services/training/cl010-red-hat-openstack-technical-overview[CL010,window=_blank]
+* https://www.redhat.com/en/services/training/cl110-red-hat-openstack-administration-i[CL110,window=_blank]
+* https://www.redhat.com/en/services/training/cl210-red-hat-openstack-administration-ii[CL210,window=_blank]

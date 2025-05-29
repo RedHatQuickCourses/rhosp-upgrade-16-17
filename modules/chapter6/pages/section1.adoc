@@ -1,0 +1,231 @@
+= Creating roles for Multi-RHEL Compute nodes
+
+Create new roles to store your nodes that you are upgrading to RHEL 9.2 or that are staying on RHEL 8.4, and move the nodes into the new roles.
+
+*Procedure:*
+
+. Copy role_data.yaml to the templates directory:
++
+[source, bash]
+----
+cp /usr/share/openstack-tripleo-heat-templates/roles_data.yaml /home/stack/templates/.
+----
+
+. Create the relevant roles for your environment. In the role_data.yaml file, copy the source Compute role to use for the new role.
++
+- ComputeRHEL-8.4 role
++
+[source, bash]
+----
+cat >>/home/stack/templates/roles_data.yaml <<EOF
+- name: ComputeRHEL-8.4
+  description: |
+    Basic Compute RHEL 8.4
+  CountDefault: 1
+  # Create external Neutron bridge (unset if using ML2/OVS without DVR)
+  tags:
+    - compute
+    - external_bridge
+  networks:
+    InternalApi:
+      subnet: internal_api_subnet
+    Tenant:
+      subnet: tenant_subnet
+    Storage:
+      subnet: storage_subnet
+  HostnameFormatDefault: '%stackname%-novacompute-%index%'
+  RoleParametersDefault:
+    FsAioMaxNumber: 1048576
+    TunedProfileName: "virtual-host"
+  # Deprecated & backward-compatible values (FIXME: Make parameters consistent)
+  # Set uses_deprecated_params to True if any deprecated params are used.
+  # These deprecated_params only need to be used for existing roles and not for
+  # composable roles.
+  uses_deprecated_params: True
+  deprecated_param_image: 'NovaImage'
+  deprecated_param_extraconfig: 'NovaComputeExtraConfig'
+  deprecated_param_metadata: 'NovaComputeServerMetadata'
+  deprecated_param_scheduler_hints: 'NovaComputeSchedulerHints'
+  deprecated_param_ips: 'NovaComputeIPs'
+  deprecated_server_resource_name: 'NovaCompute'
+  deprecated_nic_config_name: 'compute.yaml'
+  update_serial: 25
+  ServicesDefault:
+    - OS::TripleO::Services::Aide
+    - OS::TripleO::Services::AuditD
+    - OS::TripleO::Services::BootParams
+    - OS::TripleO::Services::CACerts
+    - OS::TripleO::Services::CephClient
+    - OS::TripleO::Services::CephExternal
+    - OS::TripleO::Services::Collectd
+    - OS::TripleO::Services::ComputeCeilometerAgent
+    - OS::TripleO::Services::CeilometerAgentIpmi
+    - OS::TripleO::Services::ComputeNeutronCorePlugin
+    - OS::TripleO::Services::ComputeNeutronL3Agent
+    - OS::TripleO::Services::ComputeNeutronMetadataAgent
+    - OS::TripleO::Services::ComputeNeutronOvsAgent
+    - OS::TripleO::Services::Frr
+    - OS::TripleO::Services::IpaClient
+    - OS::TripleO::Services::Ipsec
+    - OS::TripleO::Services::Iscsid
+    - OS::TripleO::Services::Kernel
+    - OS::TripleO::Services::LoginDefs
+    - OS::TripleO::Services::MetricsQdr
+    - OS::TripleO::Services::Multipathd
+    - OS::TripleO::Services::MySQLClient
+    - OS::TripleO::Services::NeutronBgpVpnBagpipe
+    - OS::TripleO::Services::NeutronLinuxbridgeAgent
+    - OS::TripleO::Services::NeutronVppAgent
+    - OS::TripleO::Services::NovaAZConfig
+    - OS::TripleO::Services::NovaCompute
+    - OS::TripleO::Services::NovaLibvirtLegacy
+    - OS::TripleO::Services::NovaLibvirtGuests
+    - OS::TripleO::Services::NovaMigrationTarget
+    - OS::TripleO::Services::ContainersLogrotateCrond
+    - OS::TripleO::Services::Podman
+    - OS::TripleO::Services::Rhsm
+    - OS::TripleO::Services::Rsyslog
+    - OS::TripleO::Services::RsyslogSidecar
+    - OS::TripleO::Services::Securetty
+    - OS::TripleO::Services::Snmp
+    - OS::TripleO::Services::Sshd
+    - OS::TripleO::Services::Timesync
+    - OS::TripleO::Services::Timezone
+    - OS::TripleO::Services::TripleoFirewall
+    - OS::TripleO::Services::TripleoPackages
+    - OS::TripleO::Services::Tuned
+    - OS::TripleO::Services::Vpp
+    - OS::TripleO::Services::OVNController
+    - OS::TripleO::Services::OVNMetadataAgent
+EOF
+----
++
+- ComputeRHEL-9.2 role
++
+[source, bash]
+----
+cat >>/home/stack/templates/roles_data.yaml <<EOF
+- name: ComputeRHEL-9.2
+  description: |
+    Compute RHEL 9-2
+  CountDefault: 1
+  # Create external Neutron bridge (unset if using ML2/OVS without DVR)
+  tags:
+    - compute
+    - external_bridge
+  networks:
+    InternalApi:
+      subnet: internal_api_subnet
+    Tenant:
+      subnet: tenant_subnet
+    Storage:
+      subnet: storage_subnet
+  HostnameFormatDefault: '%stackname%-novacompute-%index%'
+  RoleParametersDefault:
+    FsAioMaxNumber: 1048576
+    TunedProfileName: "virtual-host"
+  # Deprecated & backward-compatible values (FIXME: Make parameters consistent)
+  # Set uses_deprecated_params to True if any deprecated params are used.
+  # These deprecated_params only need to be used for existing roles and not for
+  # composable roles.
+  uses_deprecated_params: True
+  deprecated_param_image: 'NovaImage'
+  deprecated_param_extraconfig: 'NovaComputeExtraConfig'
+  deprecated_param_metadata: 'NovaComputeServerMetadata'
+  deprecated_param_scheduler_hints: 'NovaComputeSchedulerHints'
+  deprecated_param_ips: 'NovaComputeIPs'
+  deprecated_server_resource_name: 'NovaCompute'
+  deprecated_nic_config_name: 'compute.yaml'
+  update_serial: 25
+  ServicesDefault:
+    - OS::TripleO::Services::Aide
+    - OS::TripleO::Services::AuditD
+    - OS::TripleO::Services::BootParams
+    - OS::TripleO::Services::CACerts
+    - OS::TripleO::Services::CephClient
+    - OS::TripleO::Services::CephExternal
+    - OS::TripleO::Services::Collectd
+    - OS::TripleO::Services::ComputeCeilometerAgent
+    - OS::TripleO::Services::CeilometerAgentIpmi
+    - OS::TripleO::Services::ComputeNeutronCorePlugin
+    - OS::TripleO::Services::ComputeNeutronL3Agent
+    - OS::TripleO::Services::ComputeNeutronMetadataAgent
+    - OS::TripleO::Services::ComputeNeutronOvsAgent
+    - OS::TripleO::Services::Frr
+    - OS::TripleO::Services::IpaClient
+    - OS::TripleO::Services::Ipsec
+    - OS::TripleO::Services::Iscsid
+    - OS::TripleO::Services::Kernel
+    - OS::TripleO::Services::LoginDefs
+    - OS::TripleO::Services::MetricsQdr
+    - OS::TripleO::Services::Multipathd
+    - OS::TripleO::Services::MySQLClient
+    - OS::TripleO::Services::NeutronBgpVpnBagpipe
+    - OS::TripleO::Services::NeutronLinuxbridgeAgent
+    - OS::TripleO::Services::NeutronVppAgent
+    - OS::TripleO::Services::NovaAZConfig
+    - OS::TripleO::Services::NovaCompute
+    - OS::TripleO::Services::NovaLibvirt
+    - OS::TripleO::Services::NovaLibvirtGuests
+    - OS::TripleO::Services::NovaMigrationTarget
+    - OS::TripleO::Services::ContainersLogrotateCrond
+    - OS::TripleO::Services::Podman
+    - OS::TripleO::Services::Rhsm
+    - OS::TripleO::Services::Rsyslog
+    - OS::TripleO::Services::RsyslogSidecar
+    - OS::TripleO::Services::Securetty
+    - OS::TripleO::Services::Snmp
+    - OS::TripleO::Services::Sshd
+    - OS::TripleO::Services::Timesync
+    - OS::TripleO::Services::Timezone
+    - OS::TripleO::Services::TripleoFirewall
+    - OS::TripleO::Services::TripleoPackages
+    - OS::TripleO::Services::Tuned
+    - OS::TripleO::Services::Vpp
+    - OS::TripleO::Services::OVNController
+    - OS::TripleO::Services::OVNMetadataAgent
+EOF
+----
+
+. Copy the overcloud_upgrade_prepare.sh file to the copy_role_Compute_param.sh file:
++
+[source, bash]
+----
+cp overcloud_upgrade_prepare.sh copy_role_Compute_param.sh
+----
+
+. Edit the copy_role_Compute_param.sh file to include the copy_role_params.py script. This script generates the environment file that contains the additional parameters and resources for the new role.
++
+[source, bash]
+----
+cat > /home/stack/copy_role_Compute_param.sh <<EOF
+/usr/share/openstack-tripleo-heat-templates/tools/copy_role_params.py --rolename-src Compute --rolename-dst ComputeRHEL-9.2 \
+-o /home/stack/templates/compute_params.yaml \
+-e /home/stack/containers-prepare-parameter.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+-e /home/stack/templates/disable_validations.yaml \
+-e /home/stack/templates/upgrades-environment.yaml \
+-e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+-e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+-e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+-e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+-e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+-e /home/stack/skip_rhel_release.yaml \
+-e /home/stack/templates/system_upgrade.yaml
+EOF
+----
++
+- Compute_source_role was replaced with the name of your source Compute role that you are copying: Compute
+
+- Compute_destination_role was replaced with the name of your new role:ComputeRHEL-9.2`
+- _-o_ option was defined as the name of the output file that includes all the non-default values of the source Compute role for the new role. Replace Compute_new_role_params.yaml with the name of your output file: /home/stack/templates/compute_params.yaml.
+
+. Execute the copy_role_Compute_param.sh script
++
+[source, bash]
+----
+sh copy_role_Compute_param.sh
+----
++
+*Note:* In our environment the generated file below /home/stack/templates/compute_params.yaml is empty since additional parameters and resources for the new role aren’t required.

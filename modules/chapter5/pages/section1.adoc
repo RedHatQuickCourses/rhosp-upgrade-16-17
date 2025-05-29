@@ -1,0 +1,122 @@
+= Upgrading the Control Plane Nodes
+
+To upgrade the control plane nodes in your environment to RHEL 9.2, you must upgrade one-third of your control plane nodes at a time, starting with the bootstrap nodes.
+
+Each node is shut down during the system upgrade. The performance of the Pacemaker cluster and the Ceph cluster is degraded during this downtime, but there is no outage.
+
+This example includes the following nodes:
+
+- overcloud-controller-0
+- overcloud-controller-1
+- overcloud-controller-2
+
+*Procedure:*
+
+. Log in to the undercloud host as the stack user.
+Source the stackrc file:
++
+[source, bash]
+----
+source ~/stackrc
+----
+
+. Use the following variables that we used in the overcloud adoption section:
++
+[source, bash]
+----
+export CONTROL_PLANE_ROLES="--role Controller"
+export COMPUTE_ROLES="--role Compute"
+export NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel9",'
+export EL8_NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel8",'
+export EL9_TAGS='"tag":"17.1",'
+export EL8_TAGS='"tag":"17.1",'
+export CEPH_TAGS='"ceph_tag":"latest",'
+export NEUTRON_DRIVER='"neutron_driver":"ovn",'
+----
+
+. Run the following script without the CONTROL_PLANE_ROLES parameter:
++
+[source, bash]
+----
+python3 \
+/usr/share/openstack-tripleo-heat-templates/tools/multi-rhel-container-image-prepare.py \
+     ${COMPUTE_ROLES} \
+--local-push-destination \
+     --enable-multi-rhel \
+     --excludes collectd \
+     --excludes nova-libvirt \
+     --minor-override \
+"{${EL8_TAGS}${EL8_NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --major-override \
+     "{${EL9_TAGS}${NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" \
+     --output-env-file \
+/home/stack/containers-prepare-parameter.yaml
+----
+
+. Add credentials to our generated containers-prepare-parameter.yaml with the following command:
++
+[source, bash]
+----
+cat >> /home/stack/containers-prepare-parameter.yaml <<EOF           
+  ContainerImageRegistryLogin: true
+  ContainerImageRegistryCredentials:
+    registry.redhat.io:
+      TOKEN_NAME: TOKEN_PASSWORD <FIXME>
+EOF
+----
++
+[NOTE]
+Use the https://access.redhat.com/terms-based-registry[Registry Service Account,window=_blank] on RedHat Customer portal to get the _TOKEN_NAME_ and _TOKEN_PASSWORD_ strings under *ContainerImageRegistryCredentials* in the above file. +
+**Red Hat Associates** may use the details provided in LMS.
+
+. In the skip_rhel_release.yaml file, set the SkipRhelEnforcement parameter to false:
++
+[source, bash]
+----
+sed -i 's/true/false/' /home/stack/skip_rhel_release.yaml
+----
+
+. Update the overcloud_upgrade_prepare.sh file:
++
+[source, bash]
+----
+cat > /home/stack/overcloud_upgrade_prepare.sh <<EOF
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server time.google.com \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  -e /home/stack/templates/system_upgrade.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF
+----
+
+. Run the upgrade prepare command:
++
+[source, bash]
+----
+sh /home/stack/overcloud_upgrade_prepare.sh
+----
+
+. Fetch any new or modified containers that you require for the system upgrade:
++
+[source, bash]
+----
+openstack overcloud external-upgrade run --yes  \
+    --stack overcloud \
+    --tags container_image_prepare 2>&1
+----

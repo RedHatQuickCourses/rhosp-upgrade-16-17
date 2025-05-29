@@ -1,6 +1,32 @@
-= Section 3
+= Updating the Undercloud.conf File
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+. Log in to your undercloud host as the stack user.
+. Create the file /home/stack/skip_rhel_release.yaml
++
+[source, bash]
+----
+cat > /home/stack/skip_rhel_release.yaml <<EOF
+parameter_defaults:  
+  SkipRhelEnforcement: true
+EOF
+----
+
+. Edit the undercloud.conf file.
++
+Add the following parameters to the *DEFAULT* section in the file:
++
+[source, bash]
+----
+custom_env_files = /home/stack/skip_rhel_release.yaml
+----
++
+The *custom_env_files* parameter defines the location of the *ntp_pool.yaml* that is required for the upgrade.
+
+. Edit local_interface parameter
++
+----
+local_interface = eth1
+----
+
+. Check all other parameters in the file for any changes.
+. Save the file.

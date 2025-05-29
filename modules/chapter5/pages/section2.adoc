@@ -1,0 +1,112 @@
+= Upgrading the Control Plane Nodes (Continued)
+
+Continue with the below steps to proceed further with upgrading control plane nodes:
+Following actions are performed by the **openstack overcloud upgrade run** command being run on this page:
+- Performs a Leapp upgrade of the operating system.
+- Performs a reboot as a part of the Leapp upgrade.
+
+NOTE: The **openstack overcloud upgrade run** command, when executed on the controller nodes, may take approximately 20 minutes per node to complete.
+
+
+[start=9]
+. Upgrade the first one-third of the control plane nodes: overcloud-controller-0
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes \
+        --stack overcloud \
+        --tags system_upgrade \
+        --limit overcloud-controller-0
+----
+
+. Log in to the upgraded node and verify that the cluster in each node is running:
++
+----
+ssh tripleo-admin@172.25.249.59
+sudo pcs status
+sudo pcs resource cleanup
+pcs status
+----
++
+.Sample output
++
+----
+[root@overcloud-controller-0 ~]# pcs status
+Cluster name: tripleo_cluster
+Status of pacemakerd: 'Pacemaker is running' (last updated 2023-09-07 10:36:47Z)
+Cluster Summary:
+  * Stack: corosync
+  * Current DC: overcloud-controller-2 (version 2.0.5-9.el8_4.7-ba59be7122) - MIXED-VERSION partition with quorum
+  * Last updated: Thu Sep  7 10:36:47 2023
+  * Last change:  Thu Sep  7 10:36:26 2023 by hacluster via crmd on overcloud-controller-0
+  * 9 nodes configured
+  * 29 resource instances configured
+
+Node List:
+  * Online: [ overcloud-controller-0 overcloud-controller-1 overcloud-controller-2 ]
+  * GuestOnline: [ galera-bundle-0 galera-bundle-1 galera-bundle-2 rabbitmq-bundle-0 rabbitmq-bundle-1 rabbitmq-bundle-2 ]
+
+Full List of Resources:
+  * ip-172.25.250.35    (ocf:heartbeat:IPaddr2):         Started overcloud-controller-1
+  * ip-172.0.0.157      (ocf:heartbeat:IPaddr2):         Started overcloud-controller-1
+  * ip-172.16.2.183     (ocf:heartbeat:IPaddr2):         Started overcloud-controller-2
+  * ip-172.16.2.24      (ocf:heartbeat:IPaddr2):         Started overcloud-controller-2
+  * ip-172.16.1.116     (ocf:heartbeat:IPaddr2):         Started overcloud-controller-1
+  * ip-172.16.3.235     (ocf:heartbeat:IPaddr2):         Started overcloud-controller-2
+  * Container bundle set: haproxy-bundle [cluster.common.tag/haproxy:pcmklatest]:
+    * haproxy-bundle-podman-0   (ocf:heartbeat:podman):  Started overcloud-controller-0
+    * haproxy-bundle-podman-1   (ocf:heartbeat:podman):  Started overcloud-controller-1
+    * haproxy-bundle-podman-2   (ocf:heartbeat:podman):  Started overcloud-controller-2
+  * Container bundle set: galera-bundle [cluster.common.tag/mariadb:pcmklatest]:
+    * galera-bundle-0   (ocf:heartbeat:galera):  Promoted overcloud-controller-0
+    * galera-bundle-1   (ocf:heartbeat:galera):  Promoted overcloud-controller-1
+    * galera-bundle-2   (ocf:heartbeat:galera):  Promoted overcloud-controller-2
+  * Container bundle set: rabbitmq-bundle [cluster.common.tag/rabbitmq:pcmklatest]:
+    * rabbitmq-bundle-0 (ocf:heartbeat:rabbitmq-cluster):        Started overcloud-controller-0
+    * rabbitmq-bundle-1 (ocf:heartbeat:rabbitmq-cluster):        Started overcloud-controller-1
+    * rabbitmq-bundle-2 (ocf:heartbeat:rabbitmq-cluster):        Started overcloud-controller-2
+  * ip-172.16.2.157     (ocf:heartbeat:IPaddr2):         Started overcloud-controller-1
+  * Container bundle: openstack-cinder-volume [cluster.common.tag/cinder-volume:pcmklatest]:
+    * openstack-cinder-volume-podman-0  (ocf:heartbeat:podman):  Started overcloud-controller-1
+
+Daemon Status:
+  corosync: active/enabled
+  pacemaker: active/enabled
+  pcsd: active/enabled
+----
+
+. Upgrade the second one-third of the control plane nodes: overcloud-controller-1
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes \
+        --stack overcloud \
+        --tags system_upgrade \
+        --limit overcloud-controller-1
+----
+
+. Log in to the upgraded node and verify that the cluster in each node is running:
++
+----
+ssh tripleo-admin@172.25.249.100
+sudo pcs resource cleanup
+sudo pcs status
+----
+
+. Upgrade the last one-third of the control plane nodes: overcloud-controller-2
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes \
+        --stack overcloud \
+        --tags system_upgrade \
+        --limit overcloud-controller-2
+----     
+
+. Log in to the upgraded node and verify that the cluster in each node is running:
++
+----
+ssh tripleo-admin@172.25.249.55
+sudo pcs resource cleanup
+sudo pcs status
+----

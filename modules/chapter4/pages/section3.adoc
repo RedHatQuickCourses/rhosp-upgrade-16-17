@@ -1,0 +1,89 @@
+= Performing the System Upgrade on the Undercloud Host
+
+Upgrade your undercloud operating system to RHEL 9.2. As part of this upgrade, you create a file named system_upgrade.yaml file, which is used to enable the appropriate repositories and required RHOSP options and content to install Leapp. You use this file to also upgrade your control plane nodes and Compute nodes.
+
+*Procedure:*
+
+. Log in to the undercloud as the stack user.
+. Create a file named system_upgrade.yaml in your templates directory and include the following content:
++
+[source, bash]
+----
+cat > /home/stack/templates/system_upgrade.yaml <<EOF
+parameter_defaults:
+  UpgradeLeappDevelSkip: "LEAPP_UNSUPPORTED=1 LEAPP_DEVEL_SKIP_CHECK_OS_RELEASE=1 LEAPP_NO_NETWORK_RENAMING=1 LEAPP_DEVEL_TARGET_RELEASE=9.2"
+  UpgradeLeappDebug: false
+  UpgradeLeappEnabled: true
+  LeappActorsToRemove: ['checkifcfg','persistentnetnamesdisable','checkinstalledkernels','biosdevname']
+  LeappRepoInitCommand: |
+    sudo subscription-manager repos --disable=*
+    subscription-manager repos --enable rhel-8-for-x86_64-baseos-tus-rpms --enable rhel-8-for-x86_64-appstream-tus-rpms --enable openstack-17.1-for-rhel-8-x86_64-rpms
+    subscription-manager release --set=8.4
+  UpgradeLeappCommandOptions:
+    "--enablerepo=rhel-9-for-x86_64-baseos-eus-rpms --enablerepo=rhel-9-for-x86_64-appstream-eus-rpms --enablerepo=rhel-9-for-x86_64-highavailability-eus-rpms --enablerepo=openstack-17.1-for-rhel-9-x86_64-rpms --enablerepo=fast-datapath-for-rhel-9-x86_64-rpms"
+  LeappInitCommand: |
+    sudo subscription-manager repos --disable=*
+    sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=openstack-17.1-for-rhel-9-x86_64-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms
+    leapp answer --add --section check_vdo.confirm=True
+    dnf -y remove irb
+EOF
+----
+
+. Clean some non-use podman images to gain some free storage:
++
+[source, bash]
+----
+sudo podman images | awk '/none/ {print $3}' | xargs sudo podman rmi 
+----
++
+*Note:* This step is specific to this environment/virtual machine
+
+. Run the System upgrade
++
+[source, bash]
+----
+openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations
+----
++
+IMPORTANT: You may observe error while running above command
++
+**ERROR:** 
++
+----
+Upgrade has been inhibited due to the following problems:
+1. Inhibitor: Running kernel conflicts with a safe upgrade.
+----
++
+**RESOLUTION:** +
+Reboot undercloud to boot it with the latest kernel and run the Leapp upgrade again.
++
+----
+ sudo reboot
+----
++
+The reboot could take 15 to 20 minutes.
++
+----
+openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations
+----
++
+*Note:* If you need to run the Leapp upgrade again after failure, you must first reset the repositories to RHEL 8 in the undercloud.
++
+----
+sudo subscription-manager repos --disable=*
+sudo subscription-manager repos --enable rhel-8-for-x86_64-baseos-tus-rpms --enable rhel-8-for-x86_64-appstream-tus-rpms --enable openstack-17.1-for-rhel-8-x86_64-rpms
+sudo subscription-manager release --set=8.4
+openstack undercloud upgrade --yes --system-upgrade /home/stack/templates/system_upgrade.yaml --no-validations
+----
++
+NOTE: The *openstack undercloud upgrade* command above may take approximately 40 to 60 minutes to complete.
+
+. Update the old keys with the new keys generated in the previous section
++
+[source, bash]
+----
+cp .ssh/id_rsa /home/stack/overcloud-deploy/overcloud/ssh_private_key
+cp .ssh/id_rsa.pub /home/stack/overcloud-deploy/overcloud/ssh_private_key.pub
+----
++
+*Note:* Run the above command on undercloud as stack user.

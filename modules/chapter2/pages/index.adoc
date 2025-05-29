@@ -1,7 +1,6 @@
-= Chapter 2
+= Performing the Overcloud Adoption
 
-In this section, we cover... FIXME
+The overcloud adoption involves the following tasks:
 
-
-- Add or remove section entries in the `antora.yaml` file as needed.
-- Ensure you create or delete the corresponding directory for the chapter accordingly.
+- On each stack, adopt the network and host provisioning configuration exports into the overcloud.
+- Define new containers and additional compatibility configuration.

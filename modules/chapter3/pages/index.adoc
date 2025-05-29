@@ -1,7 +1,6 @@
-= Chapter 3
+= Upgrading the Overcloud
 
-In this section, we cover... FIXME
+Upgrade Red Hat OpenStack Platform content across the whole overcloud involves two steps:
 
-
-- Add or remove section entries in the `antora.yaml` file as needed.
-- Ensure you create or delete the corresponding directory for the chapter accordingly.
+- Register and subscribe the system.
+- Perform overcloud upgrade.

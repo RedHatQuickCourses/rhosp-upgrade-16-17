@@ -1,0 +1,21 @@
+# Prerequisites and Hardware Information
+
+**Prerequisites:**
+
+- Pre-deployed RHOSP16.2 cluster with 3 control and 2 compute nodes.
+- Access to RHOSP software repositories.
+- Subscription credentials.
+- IPMI access to physical or virtual baremetal nodes.
+- Access to Red Hat Customer Portal.
+- Details of the hardware being used for deployment.
+
+Make sure you are aware about the details of the available hardware on which the deployment is being done.
+
+Refer to the table below for the details of the lab being used in this training.
+
+link:_images/rhosp16.2-network-details-role.png[image:_images/rhosp16.2-network-details-role.png[Click to view]]
+
+
+Refer the image below for the network layout of the setup.
+
+link:_images/rhosp16.2-network-layout-role.png[image:_images/rhosp16.2-network-layout-role.png[Click to view]]

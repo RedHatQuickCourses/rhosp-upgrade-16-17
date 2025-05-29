@@ -1,0 +1,102 @@
+= Running the Overcloud Upgrade Preparation (Continued)
+
+Follow below steps to continue with the update process:
+
+[start=9]
+. Switch Nova to use _NovaLibvirtLegacy_ by creating a new file as below:
++
+[source, bash]
+----
+cat > /home/stack/templates/nova-legacy.yaml <<"EOF"
+resource_registry:
+  OS::TripleO::Services::NovaLibvirt: /usr/share/openstack-tripleo-heat-templates/deployment/deprecated/nova/nova-libvirt-container-puppet.yaml
+EOF
+----
++
+*NOTE:* The default RHOSP 17.1 configuration uses _NovaLibvirt_ as the default service. Because the OS on the compute nodes will remain (for now) on RHEL 8.4, you need to switch Nova to use *NovaLibvirtLegacy*.
+
+. Create an environment file called upgrades-environment.yaml in your templates directory and include the following content:
++
+[source, bash]
+----
+sudo vi /home/stack/templates/upgrades-environment.yaml
+----
++
+[source, bash]
+----
+parameter_defaults:
+  ExtraConfig:
+    nova::workarounds::disable_compute_service_check_for_ffu: true
+  DnsServers: ["10.2.70.215"]
+  DockerInsecureRegistryAddress: "director.ctlplane.localdomain:8787"
+  UpgradeInitCommand: |
+    sudo subscription-manager repos --disable=*
+      if $( grep -q  9.2 /etc/os-release )
+      then
+        sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-eus-rpms --enable=rhel-9-for-x86_64-appstream-eus-rpms --enable=rhel-9-for-x86_64-highavailability-eus-rpms --enable=openstack-17.1-for-rhel-9-x86_64-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms
+        sudo podman ps | grep -q ceph && subscription-manager repos --enable=rhceph-5-tools-for-rhel-9-x86_64-rpms
+        sudo subscription-manager release --set=9.2
+      else
+        sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
+        sudo podman ps | grep -q ceph && subscription-manager repos --enable=rhceph-5-tools-for-rhel-8-x86_64-rpms
+        sudo subscription-manager release --set=8.4
+      fi
+
+      if $(sudo podman ps | grep -q ceph )
+      then
+      sudo dnf -y install cephadm
+      fi
+----
++
+For more information about the upgrade parameters that you can configure in the environment file, see https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.2/html-single/framework_for_upgrades_13_to_16.2/index#upgrade-parameters[Upgrade parameters,window=_blank]
+
+. On the undercloud, create a file called overcloud_upgrade_prepare.sh in your templates directory. This file includes the original content of your overcloud deploy file and the environment files that are relevant to your environment. For example:
++
+[source, bash]
+----
+cat > /home/stack/overcloud_upgrade_prepare.sh <<"EOF"
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server time.google.com \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/templates/nova-legacy.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF
+----
+
+. Run the upgrade preparation command for the overcloud stack in your environment:
++
+[source, bash]
+----
+source stackrc
+chmod 755 /home/stack/overcloud_upgrade_prepare.sh
+sh /home/stack/overcloud_upgrade_prepare.sh
+----
++
+NOTE: Tha above command may take approximately 4 minutes to complete.
+
+. Wait until the upgrade preparation completes. 
+
+. Download the container images:
++
+[source, bash]
+----
+openstack overcloud external-upgrade run --yes --stack overcloud --tags container_image_prepare
+----
+
+NOTE: Tha above command may take approximately 15 minutes to complete.

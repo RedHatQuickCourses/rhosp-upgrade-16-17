@@ -1,6 +1,50 @@
-= Section 1
+= Enabling repositories for the undercloud
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+. Log in to your undercloud as the stack user (password: _student_). 
+
+. As a root user:
++
+[source, bash]
+----
+sudo -i
+subscription-manager register --force
+----
+
+. Attach your poolD or employee SKU
++
+[source, bash]
+----
+subscription-manager attach --pool=$(subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1)
+----
++
+NOTE: The option to fetch the pool ID using the above command is available only to Red Hat internal employees. All other users must use the appropriate pool ID associated with their subscription.
+
+. Change to the stack user
++
+[source, bash]
+----
+su - stack
+----
+
+. Disable all default repositories, and enable the required Red Hat Enterprise Linux repositories
++
+[source, bash]
+----
+sudo subscription-manager repos --disable=*
+sudo subscription-manager repos --enable=rhel-8-for-x86_64-baseos-tus-rpms --enable=rhel-8-for-x86_64-appstream-tus-rpms --enable=rhel-8-for-x86_64-highavailability-tus-rpms --enable=openstack-17.1-for-rhel-8-x86_64-rpms --enable=fast-datapath-for-rhel-8-x86_64-rpms
+sudo subscription-manager release --set=8.4
+----
+
+. Switch the container-tools module version to RHEL 8 on all nodes:
++
+[source, bash]
+----
+sudo dnf -y module switch-to container-tools:rhel8
+----
+
+. Install the command line tools for director installation and configuration:
++
+[source, bash]
+----
+sudo dnf install -y python3-tripleoclient
+----

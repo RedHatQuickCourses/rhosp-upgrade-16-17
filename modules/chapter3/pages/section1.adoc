@@ -1,6 +1,51 @@
-= Section 1
+= Register and subscribe the overcloud
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+Before going through the process of overcloud, please make sure your overcloud is subscribed.
+
+. Edit the overcloud subscription management environment file ~/subscribe.yaml using your own CDN credentials:
++
+[source, bash]
+----
+cat > ~/subscribe.yaml <<EOF
+- hosts: all
+  tasks:
+    - name: Register as user with password and auto-subscribe to available content.
+      redhat_subscription:
+        state: present
+        username: "FIXME username"
+        password: "{{ rhnpassword }}"
+        auto_attach: true
+        force_register: true
+      become: true
+EOF
+----
++
+NOTE: Replace the string **FIXME username** with your Red Hat customer portal username.
+
+. If needed add pool information (optional)
++
+[source, bash]
+----
+cat >> ~/subscribe.yaml <<EOF
+    - name: Attach to defined pool_id
+      become: yes
+      command: subscription-manager attach --pool=<POOL ID>
+EOF
+----
++
+*Note:* Red Hat internal associates may use below command to find the pool ID to be used:
++
+----
+[root@director ~]# subscription-manager list --matches="Employee SKU" --pool-only --available | head -n1
+----
+
+. Run the _subscribe.yaml_ playbook, replace the rhnpassword variable by you RHN account password:
++
+[source, bash]
+----
+export PASSWORD="FIXME password"
+export ANSIBLE_HOST_KEY_CHECKING=False
+ansible-playbook -i ~/overcloud-deploy/overcloud/tripleo-ansible-inventory.yaml -f 25 ~/subscribe.yaml --limit Undercloud,Controller,Compute -e "rhnpassword=$PASSWORD"
+----
++
+NOTE: Replace the string **FIXME password** with your Red Hat customer portal password.

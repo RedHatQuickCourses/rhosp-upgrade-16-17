@@ -1,0 +1,22 @@
+= Running the Director Upgrade
+
+. Run the following command to upgrade the director on the undercloud:
++
+[source, bash]
+----
+openstack undercloud upgrade --yes --no-validations
+----
++
+NOTE: The above command may take approximately an hour to complete.
++
+If your upgrade command fails with the following error:
++
+----
+2023-07-19 08:15:18.869778 | 525400cf-381f-5864-38c7-00000000073e |      FATAL | migrate existing introspection data | undercloud | error={"changed": true, "cmd": "podman exec -u root ironic_inspector ironic-inspector-migrate-data --from swift --to database --config-file /etc/ironic-inspector/inspector.conf\n", "delta": "0:01:42.467282", "end": "2023-07-19 08:15:18.830981", "failed_when_result": true, "msg": "non-zero return code", "rc": 1, "start": "2023-07-19 08:13:36.363699", "stderr": "b\"(pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')\\n(Background on this error at: http://sqlalche.me/e/e3q8)\"", "stderr_lines":["b\"(pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')\\n(Background on this error at: http://sqlalche.me/e/e3q8)\""], "stdout": "", "stdout_lines": []}
+----
++
+Follow the instructions described here: https://access.redhat.com/solutions/7025512[Solution,window=_blank]
++
+----
+sudo systemctl restart tripleo_mysql.service
+----

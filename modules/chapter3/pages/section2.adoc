@@ -1,6 +1,22 @@
-= Section 2
+= Upgrading RHOSP on all Nodes in Each Stack
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+Upgrade all overcloud nodes to Red Hat OpenStack Platform (RHOSP) 17.1 for each stack, starting with the main stack.
+
+*Procedure:* 
+
+. Log in to the undercloud as the stack user.
+. Source the stackrc file:
++
+[source, bash]
+----
+source ~/stackrc
+----
+
+. Upgrade RHOSP on all nodes in your main stack:
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes --stack overcloud --debug --limit allovercloud,undercloud --playbook all
+----
+
+NOTE: This command may take approximately an hour to complete

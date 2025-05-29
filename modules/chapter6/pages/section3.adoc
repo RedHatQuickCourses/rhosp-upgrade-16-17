@@ -1,0 +1,70 @@
+= Upgrading the Compute Node Operating System
+
+Upgrade the operating system on selected Compute nodes to RHEL 9.2. You can upgrade multiple nodes from different roles at the same time.
+
+*Prerequisites:* Ensure that you have created the necessary roles for your environment. For more information about creating roles, see
+
+. In the /home/stack/skip_rhel_release.yaml file, set the SkipRhelEnforcement parameter to false:
++
+----
+parameter_defaults:
+  SkipRhelEnforcement: false
+----
+
+. Run the openstack overcloud upgrade prepare command to set the parameters and resources required for the new roles. Note: In our environment the generated environment file /home/stack/templates/compute_params.yaml is empty, so we didn’t include it in the upgrade prepare command below.
++
+[source, bash]
+----
+cat > /home/stack/overcloud_compute_upgrade_prepare.sh <<EOF
+#!/bin/bash
+openstack overcloud upgrade prepare --yes \
+  --timeout 460 \
+  --ntp-server time.google.com \
+  --stack overcloud \
+  --templates -e /home/stack/templates/node-info.yaml \
+  -e /home/stack/containers-prepare-parameter.yaml \
+  -r /home/stack/templates/roles_data.yaml \
+  -n /home/stack/templates/network_data.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /home/stack/templates/disable_validations.yaml \
+  -e /home/stack/templates/upgrades-environment.yaml \
+  -e /home/stack/overcloud-deploy/overcloud/overcloud-network-environment.yaml \
+  -e /home/stack/overcloud_adopt/baremetal-deployment.yaml \
+  -e /home/stack/overcloud_adopt/generated-networks-deployed.yaml \
+  -e /home/stack/overcloud_adopt/generated-vip-deployed.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/nova-hw-machine-type-upgrade.yaml \
+  -e /home/stack/skip_rhel_release.yaml \
+  -e /home/stack/templates/system_upgrade.yaml \
+  --log-file /tmp/install_overcloud.log \
+  --libvirt-type qemu
+EOF
+----
+
+. Execute the script:
++
+[source, bash]
+----
+sh overcloud_compute_upgrade_prepare.sh
+----
+
+. Upgrade the operating system on overcloud-novacompute-0 nodes. Use the --limit option with a comma-separated list of nodes that you want to upgrade: overcloud-novacompute-0
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes --tags system_upgrade --stack overcloud --limit overcloud-novacompute-0
+----
++
+NOTE: The above command may take approximately 20 minutes to complete.
+
+. Upgrade the containers on the Compute nodes to RHEL 9.2. Use the --limit option with a comma-separated list of nodes that you want to upgrade.
++
+[source, bash]
+----
+openstack overcloud upgrade run --yes --stack overcloud  --limit overcloud-novacompute-0
+----
++
+NOTE: The above command may take approximately 10 minutes to complete.
+
+
+**Upgrade of Red Hat OpenStack Platform 16.2 to 17.1 is complete**

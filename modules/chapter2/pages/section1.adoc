@@ -1,6 +1,114 @@
-= Section 1
+= Running the Overcloud Upgrade Preparation
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+To upgrade Red Hat OpenStack Platform to the latest version, you must run the _overcloud upgrade prepare_ command. The command performs the following tasks:
+
+- Updates the overcloud plan to Red Hat OpenStack Platform (RHOSP) 17.1
+- Prepares the nodes for the upgrade
+
+*Procedure:*
+
+. Log into the undercloud as the stack user. 
+. Source the stackrc file:
++
+[source, bash]
+----
+source ~/stackrc
+----
+
+. On the main stack, copy the _passwords.yaml_ file to the _~/overcloud-deploy/overcloud directory_. Repeat this step on each stack in your environment:
++
+[source, bash]
+----
+cp ~/overcloud-deploy/overcloud/tripleo-overcloud-passwords.yaml ~/overcloud-deploy/overcloud/overcloud-passwords.yaml
+----
+
+. On the main stack, copy the network-data.yaml file to the stack user’s home directory and deploy the networks. Repeat this step on each stack in your environment:
++
+[source, bash]
+----
+cp ~/overcloud-deploy/overcloud/tripleo-overcloud-network-data.yaml ~/
+mkdir ~/overcloud_adopt
+openstack overcloud network provision --debug --output /home/stack/overcloud_adopt/generated-networks-deployed.yaml tripleo-overcloud-network-data.yaml
+----
+
+. On the main stack, copy the _virtual-ips.yaml_ to the stack user’s home directory and provision the network VIPs. Repeat this step on each stack in your environment:
++
+[source, bash]
+----
+cp ~/overcloud-deploy/overcloud/tripleo-overcloud-virtual-ips.yaml ~/
+openstack overcloud network vip provision --debug --stack overcloud --output /home/stack/overcloud_adopt/generated-vip-deployed.yaml tripleo-overcloud-virtual-ips.yaml
+----
+
+. On the main stack, copy the baremetal-deployment.yaml to the stack user’s home directory and provision the overcloud nodes. Repeat this step on each stack in your environment:
++
+[source, bash]
+----
+cp ~/overcloud-deploy/overcloud/tripleo-overcloud-baremetal-deployment.yaml ~/
+openstack overcloud node provision --debug --stack overcloud --output /home/stack/overcloud_adopt/baremetal-deployment.yaml tripleo-overcloud-baremetal-deployment.yaml
+----
+
+. Complete the following steps to prepare the containers:
++
+.. Back up the containers-prepare-parameter.yaml file that you used for the undercloud upgrade:
++
+[source, bash]
+----
+cp containers-prepare-parameter.yaml containers-prepare-parameter.yaml.bck
+----
+.. Define the following environment variables before you run the script to update the containers-prepare-parameter.yaml file.
++
+  - NAMESPACE - The namespace for the UBI9 images. For example, NAMESPACE='"namespace":"example.redhat.com:5002
+  - EL8_NAMESPACE - The namespace for the UBI8 images.
+  - NEUTRON_DRIVER - The driver to use and determine which OpenStack Networking (neutron) container to use. Set to the type of containers you used to deploy the original stack. For example, set to NEUTRON_DRIVER=' "neutron_driver":"ovn" to use OVN-based containers.
+  - EL9_TAGS - The tags of the UBI9 images. EL9_TAGS='"tag":"17.1",'
+  - EL8_TAGS - The tags of the UBI8 images. EL8_TAGS='"tag":"17.1".'
+  - CEPH_TAGS - If you deployed Red Hat Ceph Storage, specify Ceph Storage 5 container images. For example, "ceph_tag":"5-404".
+  +
+[source, bash]
+----  
+sudo awk '/tripleo_role_name/ {print "--role " $2}' /var/lib/mistral/overcloud/tripleo-ansible-inventory.yaml | grep -i compute
+----
+  - CEPH_TAGS - If you deployed Red Hat Ceph Storage, specify Ceph Storage 5 container images. For example, "ceph_tag":"5-404".
++
+[source, bash]
+----
+export CONTROL_PLANE_ROLES="--role Controller"
+export COMPUTE_ROLES="--role Compute"
+export NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel9",'
+export EL8_NAMESPACE='"namespace":"registry.redhat.io/rhosp-rhel8",'
+export EL9_TAGS='"tag":"17.1",'
+export EL8_TAGS='"tag":"17.1",'
+export CEPH_TAGS='"ceph_tag":"latest",'
+export NEUTRON_DRIVER='"neutron_driver":"ovn",'
+----
++
+  - Run the following script to to update the containers-prepare-parameter.yaml file:
++
+[source, bash]
+----
+python3 /usr/share/openstack-tripleo-heat-templates/tools/multi-rhel-container-image-prepare.py \
+        ${COMPUTE_ROLES} \
+        ${CONTROL_PLANE_ROLES} \
+        --enable-multi-rhel \
+        --excludes collectd \
+--local-push-destination \
+--excludes nova-libvirt \
+        --minor-override "{${EL8_TAGS}${EL8_NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}" --major-override "{${EL9_TAGS}${NAMESPACE}${CEPH_TAGS}${NEUTRON_DRIVER}\"no_tag\":\"not_used\"}"  \
+        --output-env-file /home/stack/containers-prepare-parameter.yaml
+----
+
+. Add credentials to our generated containers-prepare-parameter.yaml with the following command:
++
+[source, bash]
+----
+cat >> /home/stack/containers-prepare-parameter.yaml <<EOF           
+  ContainerImageRegistryLogin: true
+  ContainerImageRegistryCredentials:
+    registry.redhat.io:
+      TOKEN_NAME: TOKEN_PASSWORD <FIXME>
+EOF
+----
+
+[NOTE]
+Use the https://access.redhat.com/terms-based-registry[Registry Service Account,window=_blank] on RedHat Customer portal to get the _TOKEN_NAME_ and _TOKEN_PASSWORD_ strings under *ContainerImageRegistryCredentials* in the above file. +
+**Red Hat Associates** may use the details provided in LMS.

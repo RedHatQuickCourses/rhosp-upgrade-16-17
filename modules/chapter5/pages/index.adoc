@@ -1,0 +1,7 @@
+= Upgrading the Control Plane Operating System
+
+Upgrade the operating system on your control plane nodes. The upgrade includes the following tasks:
+
+- Running the overcloud upgrade prepare command with the system upgrade parameters
+- Running the overcloud system upgrade, which uses Leapp to upgrade RHEL in-place
+- Rebooting the nodes

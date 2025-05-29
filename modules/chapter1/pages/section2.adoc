@@ -1,6 +1,13 @@
-= Section 2
+= Container Image Preparation Parameters
 
-* Create multiple copies of this section as needed.
-* Remove any unnecessary sections or chapter pages.
-* Customize the section as appropriate.
-* Ensure that each page contains a manageable amount of content.
+. Log in to your undercloud as the stack user.
+. Modify the existing /home/stack/containers-prepare-parameter.yaml file
++
+[source, bash]
+----
+sed -i "s/16.2/17.1/" containers-prepare-parameter.yaml
+sed -i "s/rhceph-4-dashboard-rhel8/rhceph-6-dashboard-rhel9/" containers-prepare-parameter.yaml
+sed -i "s/rhceph-4-rhel8/rhceph-6-rhel9/" containers-prepare-parameter.yaml
+sed -i "s/ceph_grafana_tag: 4/ceph_grafana_tag: latest/" containers-prepare-parameter.yaml
+sed -i "s/rhosp-rhel8/rhosp-rhel9/" containers-prepare-parameter.yaml
+----
